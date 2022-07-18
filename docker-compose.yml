@@ -18,3 +18,4 @@ services:
     volumes:
       - ./:/workspace:z
       - .vscode-server/:/home/vscode/.vscode-server:z
+      - .m2/:/home/vscode/.m2:z

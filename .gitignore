@@ -1,4 +1,5 @@
 .vscode-server/
+.m2/
 
 Thumbs.db
 .DS_Store
