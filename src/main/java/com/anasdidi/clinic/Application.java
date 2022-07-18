@@ -1,4 +1,4 @@
-package micronaut.clinic.server;
+package com.anasdidi.clinic;
 
 import io.micronaut.runtime.Micronaut;
 

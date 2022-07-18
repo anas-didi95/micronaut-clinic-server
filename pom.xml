@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>micronaut.clinic.server</groupId>
-  <artifactId>micronaut-clinic-server</artifactId>
+  <groupId>com.anasdidi</groupId>
+  <artifactId>clinic</artifactId>
   <version>0.1</version>
   <packaging>${packaging}</packaging>
 
@@ -15,11 +15,11 @@
 
   <properties>
     <packaging>jar</packaging>
-    <jdk.version>11</jdk.version>
-    <release.version>11</release.version>
+    <jdk.version>17</jdk.version>
+    <release.version>17</release.version>
     <micronaut.version>3.5.3</micronaut.version>
     <micronaut.runtime>netty</micronaut.runtime>
-    <exec.mainClass>micronaut.clinic.server.Application</exec.mainClass>
+    <exec.mainClass>com.anasdidi.clinic.Application</exec.mainClass>
   </properties>
 
   <repositories>
@@ -88,7 +88,7 @@
         <groupId>io.micronaut.build</groupId>
         <artifactId>micronaut-maven-plugin</artifactId>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -104,8 +104,8 @@
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
-            <arg>-Amicronaut.processing.group=micronaut.clinic.server</arg>
-            <arg>-Amicronaut.processing.module=micronaut-clinic-server</arg>
+            <arg>-Amicronaut.processing.group=com.anasdidi</arg>
+            <arg>-Amicronaut.processing.module=clinic</arg>
           </compilerArgs>
         </configuration>
       </plugin>

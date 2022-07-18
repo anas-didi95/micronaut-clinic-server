@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: micronautClinicServer
+    name: clinic
 netty:
   default:
     allocator:
