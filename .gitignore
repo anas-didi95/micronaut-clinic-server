@@ -1,5 +1,6 @@
 .vscode-server/
 .m2/
+.env
 
 Thumbs.db
 .DS_Store
