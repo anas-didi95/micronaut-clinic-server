@@ -20,3 +20,8 @@ liquibase:
     default:
       enabled: true
       change-log: classpath:/db/liquibase-changlog.xml
+
+endpoints:
+  liquibase:
+    enabled: true
+    sensitive: false
