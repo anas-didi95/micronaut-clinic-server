@@ -17,6 +17,7 @@ features:
     junit,
     liquibase,
     logback,
+    management,
     maven,
     netty-server,
     postgres,
