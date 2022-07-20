@@ -1,0 +1,4 @@
+liquibase:
+    datasources:
+        default:
+            drop-first: true
