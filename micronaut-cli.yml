@@ -23,6 +23,8 @@ features:
     netty-server,
     postgres,
     r2dbc,
+    reactor,
+    reactor-http-client,
     readme,
     shade,
     testcontainers,
