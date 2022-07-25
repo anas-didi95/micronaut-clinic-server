@@ -6,6 +6,13 @@
 - [Micronaut Guides](https://guides.micronaut.io/index.html)
 ---
 
+## Feature data-r2dbc documentation
+
+- [Micronaut Data R2DBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/#dbc)
+
+- [https://r2dbc.io](https://r2dbc.io)
+
+
 ## Feature liquibase documentation
 
 - [Micronaut Liquibase Database Migration documentation](https://micronaut-projects.github.io/micronaut-liquibase/latest/guide/index.html)
@@ -13,9 +20,9 @@
 - [https://www.liquibase.org/](https://www.liquibase.org/)
 
 
-## Feature jdbc-hikari documentation
+## Feature testcontainers documentation
 
-- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+- [https://www.testcontainers.org/](https://www.testcontainers.org/)
 
 
 ## Feature http-client documentation
@@ -23,14 +30,11 @@
 - [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
 
 
-## Feature testcontainers documentation
+## Feature r2dbc documentation
 
-- [https://www.testcontainers.org/](https://www.testcontainers.org/)
+- [Micronaut R2DBC documentation](https://micronaut-projects.github.io/micronaut-r2dbc/latest/guide/)
 
-
-## Feature data-jdbc documentation
-
-- [Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
+- [https://r2dbc.io](https://r2dbc.io)
 
 
 ## Feature management documentation
