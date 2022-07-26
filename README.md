@@ -6,6 +6,18 @@
 - [Micronaut Guides](https://guides.micronaut.io/index.html)
 ---
 
+## Feature data-jdbc documentation
+
+- [Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
+
+
+## Feature data-r2dbc documentation
+
+- [Micronaut Data R2DBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/#dbc)
+
+- [https://r2dbc.io](https://r2dbc.io)
+
+
 ## Feature liquibase documentation
 
 - [Micronaut Liquibase Database Migration documentation](https://micronaut-projects.github.io/micronaut-liquibase/latest/guide/index.html)
@@ -13,9 +25,14 @@
 - [https://www.liquibase.org/](https://www.liquibase.org/)
 
 
-## Feature jdbc-hikari documentation
+## Feature testcontainers documentation
 
-- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+- [https://www.testcontainers.org/](https://www.testcontainers.org/)
+
+
+## Feature reactor documentation
+
+- [Micronaut Reactor documentation](https://micronaut-projects.github.io/micronaut-reactor/snapshot/guide/index.html)
 
 
 ## Feature http-client documentation
@@ -23,16 +40,31 @@
 - [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
 
 
-## Feature testcontainers documentation
+## Feature r2dbc documentation
 
-- [https://www.testcontainers.org/](https://www.testcontainers.org/)
+- [Micronaut R2DBC documentation](https://micronaut-projects.github.io/micronaut-r2dbc/latest/guide/)
 
-
-## Feature data-jdbc documentation
-
-- [Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
+- [https://r2dbc.io](https://r2dbc.io)
 
 
 ## Feature management documentation
 
 - [Micronaut Management documentation](https://docs.micronaut.io/latest/guide/index.html#management)
+
+
+## Feature jdbc-hikari documentation
+
+- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+
+## Environment Variables
+Following table is a **mandatory** environment variables used in this project.
+
+| Variable Name | Datatype | Description |
+| --- | --- | --- |
+| APP_HOST | String | Server host |
+| APP_PORT | Number | Server port |
+| DB_HOST | String | Database host |
+| DB_PORT | Number | Database port |
+| DB_NAME | String | Database name |
+| DB_USERNAME | String | Database username |
+| DB_PASSWORD | String | Database password |
