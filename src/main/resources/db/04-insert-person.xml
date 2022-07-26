@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <include file="classpath:/db/01-create-person.xml" />
-  <include file="classpath:/db/02-nullable-age.xml" />
-  <include file="classpath:/db/03-add-column-name.xml" />
-  <include file="classpath:/db/04-insert-person.xml" />
+  <changeSet id="04" author="sdelamo">
+    <insert schemaName="public" tableName="person">
+      <column name="id" value="1" />
+      <column name="version" value="0" />
+      <column name="age" value="27" />
+      <column name="name" value="Anas Juwaidi" />
+    </insert>
+  </changeSet>
 
 </databaseChangeLog>

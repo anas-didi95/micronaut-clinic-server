@@ -18,48 +18,48 @@ import jakarta.inject.Inject;
 @MicronautTest
 public class LiquibaseEndpointTests {
 
-    @Inject
-    @Client("/")
-    HttpClient httpClient;
+  @Inject
+  @Client("/")
+  HttpClient httpClient;
 
-    @Test
-    void migrationsAreExposedViaAndEndpoint() {
-        BlockingHttpClient client = httpClient.toBlocking();
+  @Test
+  void migrationsAreExposedViaAndEndpoint() {
+    BlockingHttpClient client = httpClient.toBlocking();
 
-        HttpResponse<LiquibaseReport> response = client.exchange(
-                HttpRequest.GET("/liquibase"),
-                LiquibaseReport.class);
-        assertEquals(OK, response.status());
+    HttpResponse<LiquibaseReport> response = client.exchange(
+        HttpRequest.GET("/liquibase"),
+        LiquibaseReport.class);
+    assertEquals(OK, response.status());
 
-        LiquibaseReport liquibaseReport = response.body();
-        assertNotNull(liquibaseReport);
-        assertNotNull(liquibaseReport.getChangeSets());
-        assertEquals(2, liquibaseReport.getChangeSets().size());
+    LiquibaseReport liquibaseReport = response.body();
+    assertNotNull(liquibaseReport);
+    assertNotNull(liquibaseReport.getChangeSets());
+    assertEquals(4, liquibaseReport.getChangeSets().size());
+  }
+
+  static class LiquibaseReport {
+
+    private List<ChangeSet> changeSets;
+
+    public void setChangeSets(List<ChangeSet> changeSets) {
+      this.changeSets = changeSets;
     }
 
-    static class LiquibaseReport {
+    public List<ChangeSet> getChangeSets() {
+      return changeSets;
+    }
+  }
 
-        private List<ChangeSet> changeSets;
+  static class ChangeSet {
 
-        public void setChangeSets(List<ChangeSet> changeSets) {
-            this.changeSets = changeSets;
-        }
+    private String id;
 
-        public List<ChangeSet> getChangeSets() {
-            return changeSets;
-        }
+    public void setId(String id) {
+      this.id = id;
     }
 
-    static class ChangeSet {
-
-        private String id;
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getId() {
-            return id;
-        }
+    public String getId() {
+      return id;
     }
+  }
 }

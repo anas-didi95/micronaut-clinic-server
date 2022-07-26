@@ -13,6 +13,13 @@ datasources:
     password: ${DB_PASSWORD}
     schema-generate: NONE
 
+r2dbc:
+  datasources:
+    default:
+      url: r2dbc:postgresql://postgres:5432/postgres
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+
 liquibase:
   datasources:
     default:
