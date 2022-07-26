@@ -55,3 +55,16 @@
 ## Feature jdbc-hikari documentation
 
 - [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+
+## Environment Variables
+Following table is a **mandatory** environment variables used in this project.
+
+| Variable Name | Datatype | Description |
+| --- | --- | --- |
+| APP_HOST | String | Server host |
+| APP_PORT | Number | Server port |
+| DB_HOST | String | Database host |
+| DB_PORT | Number | Database port |
+| DB_NAME | String | Database name |
+| DB_USERNAME | String | Database username |
+| DB_PASSWORD | String | Database password |
