@@ -75,3 +75,4 @@ Following table is a **mandatory** environment variables used in this project.
 | DB_NAME | String | Database name |
 | DB_USERNAME | String | Database username |
 | DB_PASSWORD | String | Database password |
+| MICRONAUT_ENVIRONMENTS | String | Active environment names (e.g. dev,test)(use comma for multiple names) |
