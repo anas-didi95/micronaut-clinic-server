@@ -8,50 +8,52 @@ import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Version;
+import lombok.ToString;
 
 @MappedEntity
+@ToString
 public class Person {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    @Version
-    private Long version;
+  @Version
+  private Long version;
 
-    @NonNull
-    @NotBlank
-    private final String name;
+  @NonNull
+  @NotBlank
+  private final String name;
 
-    private final int age;
+  private final int age;
 
-    public Person(@NonNull String name, @Nullable int age) {
-        this.name = name;
-        this.age = age;
-    }
+  public Person(@NonNull String name, @Nullable int age) {
+    this.name = name;
+    this.age = age;
+  }
 
-    public int getAge() {
-        return age;
-    }
+  public int getAge() {
+    return age;
+  }
 
-    @NonNull
-    public String getName() {
-        return name;
-    }
+  @NonNull
+  public String getName() {
+    return name;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getVersion() {
-        return version;
-    }
+  public Long getVersion() {
+    return version;
+  }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
+  public void setVersion(Long version) {
+    this.version = version;
+  }
 }

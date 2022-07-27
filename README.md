@@ -6,16 +6,16 @@
 - [Micronaut Guides](https://guides.micronaut.io/index.html)
 ---
 
-## Feature data-jdbc documentation
-
-- [Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
-
-
 ## Feature data-r2dbc documentation
 
 - [Micronaut Data R2DBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/#dbc)
 
 - [https://r2dbc.io](https://r2dbc.io)
+
+
+## Feature http-client documentation
+
+- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
 
 
 ## Feature liquibase documentation
@@ -25,21 +25,6 @@
 - [https://www.liquibase.org/](https://www.liquibase.org/)
 
 
-## Feature testcontainers documentation
-
-- [https://www.testcontainers.org/](https://www.testcontainers.org/)
-
-
-## Feature reactor documentation
-
-- [Micronaut Reactor documentation](https://micronaut-projects.github.io/micronaut-reactor/snapshot/guide/index.html)
-
-
-## Feature http-client documentation
-
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
-
-
 ## Feature r2dbc documentation
 
 - [Micronaut R2DBC documentation](https://micronaut-projects.github.io/micronaut-r2dbc/latest/guide/)
@@ -47,14 +32,36 @@
 - [https://r2dbc.io](https://r2dbc.io)
 
 
+## Feature jdbc-hikari documentation
+
+- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+
+
+## Feature testcontainers documentation
+
+- [https://www.testcontainers.org/](https://www.testcontainers.org/)
+
+
+## Feature lombok documentation
+
+- [Micronaut Project Lombok documentation](https://docs.micronaut.io/latest/guide/index.html#lombok)
+
+- [https://projectlombok.org/features/all](https://projectlombok.org/features/all)
+
+
 ## Feature management documentation
 
 - [Micronaut Management documentation](https://docs.micronaut.io/latest/guide/index.html#management)
 
 
-## Feature jdbc-hikari documentation
+## Feature reactor documentation
 
-- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+- [Micronaut Reactor documentation](https://micronaut-projects.github.io/micronaut-reactor/snapshot/guide/index.html)
+
+
+## Feature data-jdbc documentation
+
+- [Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
 
 ## Environment Variables
 Following table is a **mandatory** environment variables used in this project.
