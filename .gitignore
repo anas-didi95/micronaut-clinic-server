@@ -1,3 +1,4 @@
+log/
 .vscode-server/
 .m2/
 .env
