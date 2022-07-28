@@ -204,6 +204,20 @@
           </compilerArgs>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <version>4.2.0</version>
+        <configuration>
+          <changeLogFile>src/main/resources/db/changelog/db.changelog-main.xml</changeLogFile>
+          <url>jdbc:postgresql://${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}</url>
+          <username>${env.DB_USERNAME}</username>
+          <password>${env.DB_PASSWORD}</password>
+          <rollbackTag>0.1.0</rollbackTag>
+          <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
