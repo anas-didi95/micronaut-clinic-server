@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.anasdidi</groupId>
   <artifactId>clinic</artifactId>
-  <version>0.1</version>
+  <version>0.1.0</version>
   <packaging>${packaging}</packaging>
 
   <parent>
@@ -214,7 +214,7 @@
           <url>jdbc:postgresql://${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}</url>
           <username>${env.DB_USERNAME}</username>
           <password>${env.DB_PASSWORD}</password>
-          <rollbackTag>0.1.0</rollbackTag>
+          <rollbackTag>${project.version}</rollbackTag>
           <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
         </configuration>
       </plugin>
