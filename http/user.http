@@ -1,0 +1,10 @@
+@baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic/v1/user
+
+// @name create
+POST {{baseUrl}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Anas Juwaidi"
+}
