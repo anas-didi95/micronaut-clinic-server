@@ -4,6 +4,7 @@ micronaut:
   server:
     host: ${APP_HOST}
     port: ${APP_PORT}
+    context-path: /clinic
 netty:
   default:
     allocator:
