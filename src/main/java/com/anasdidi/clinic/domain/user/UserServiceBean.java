@@ -1,7 +1,5 @@
 package com.anasdidi.clinic.domain.user;
 
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +20,8 @@ class UserServiceBean implements UserService {
 
   @Override
   public Mono<UserDTO> create(UserDAO domain) {
-    String id = UUID.randomUUID().toString();
-    domain.setId(id);
+    domain.setIsDeleted(false);
+    domain.setCreatedBy("SYSTEM");
 
     logger.debug("[create] domain={}", domain);
 

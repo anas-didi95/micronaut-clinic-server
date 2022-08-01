@@ -6,5 +6,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Anas Juwaidi"
+  "id": "anas",
+  "fullName": "Anas Juwaidi"
 }

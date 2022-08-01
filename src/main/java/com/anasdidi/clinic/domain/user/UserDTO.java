@@ -12,5 +12,5 @@ import lombok.Value;
 public class UserDTO extends BaseDTO {
 
   private final String id;
-  private final String name;
+  private final String fullName;
 }

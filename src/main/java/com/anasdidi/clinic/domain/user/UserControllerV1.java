@@ -24,7 +24,7 @@ class UserControllerV1 {
   @Post(value = "/", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
   Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody) {
     return Mono.just(requestBody)
-        .map(dto -> UserDAO.builder().name(dto.getName()).build())
+        .map(dto -> UserDAO.builder().id(dto.getId()).fullName(dto.getFullName()).build())
         .flatMap(domain -> userService.create(domain))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));

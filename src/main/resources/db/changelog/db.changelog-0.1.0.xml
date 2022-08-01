@@ -9,9 +9,15 @@
       <column name="id" type="varchar(36)">
         <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user" />
       </column>
-      <column name="name" type="varchar(100)">
+      <column name="full_name" type="varchar(100)">
         <constraints nullable="false" />
       </column>
+      <column name="is_del" type="boolean" defaultValue="false" value="false" />
+      <column name="created_dt" type="timestamp" />
+      <column name="created_by" type="varchar(36)" />
+      <column name="updated_dt" type="timestamp" />
+      <column name="updated_by" type="varchar(36)" />
+      <column name="version" type="int" />
     </createTable>
   </changeSet>
 </databaseChangeLog>

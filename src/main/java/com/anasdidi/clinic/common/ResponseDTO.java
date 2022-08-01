@@ -1,14 +1,18 @@
 package com.anasdidi.clinic.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Value
-@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Getter
+@ToString
 public class ResponseDTO extends BaseDTO {
 
-  private final String id;
-  private final String status;
+  private String id;
+  private String status;
 }
