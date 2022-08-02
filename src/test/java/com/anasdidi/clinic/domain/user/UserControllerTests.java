@@ -48,4 +48,16 @@ class UserControllerTests {
     Assertions.assertNotNull(dao.getCreatedBy());
     Assertions.assertEquals(0, dao.getVersion());
   }
+
+  @Test
+  void testUserCreateValidationError(RequestSpecification spec) {
+    String value = "";
+    UserDTO requestBody = UserDTO.builder().id(value).fullName(value).build();
+
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().post(baseURI)
+        .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("_embedded.errors", Matchers.hasSize(2));
+  }
 }

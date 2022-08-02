@@ -2,6 +2,8 @@ package com.anasdidi.clinic.domain.user;
 
 import java.time.Instant;
 
+import javax.validation.constraints.NotBlank;
+
 import com.anasdidi.clinic.common.BaseDAO;
 
 import io.micronaut.data.annotation.DateCreated;
@@ -28,9 +30,11 @@ class UserDAO extends BaseDAO {
 
   @Id
   @MappedProperty(value = "id")
+  @NotBlank
   private String id;
 
   @MappedProperty(value = "full_name")
+  @NotBlank
   private String fullName;
 
   @MappedProperty(value = "is_del")
