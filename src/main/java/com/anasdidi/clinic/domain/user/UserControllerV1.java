@@ -27,7 +27,7 @@ class UserControllerV1 {
   Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody) {
     return Mono.just(requestBody)
         .map(dto -> UserDAO.builder().id(dto.getId()).fullName(dto.getFullName()).build())
-        .flatMap(domain -> userValidator.test(domain))
+        .flatMap(domain -> userValidator.validate(domain))
         .flatMap(domain -> userService.create(domain))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));
