@@ -3,6 +3,8 @@ package com.anasdidi.clinic.domain.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
@@ -25,7 +27,16 @@ class UserServiceBean implements UserService {
 
     logger.debug("[create] domain={}", domain);
 
-    return Mono.from(userRepository.save(domain))
+    Mono<Void> check = userRepository.existsById(domain.getId()).flatMap(result -> {
+      if (result) {
+        logger.error("[create] domain={}", domain);
+        return Mono.error(new RecordAlreadyExistsException(domain.getId()));
+      }
+      return Mono.empty();
+    });
+    Mono<UserDTO> save = Mono.from(userRepository.save(domain))
         .map(result -> UserDTO.builder().id(result.getId()).build());
+
+    return check.then(save);
   }
 }

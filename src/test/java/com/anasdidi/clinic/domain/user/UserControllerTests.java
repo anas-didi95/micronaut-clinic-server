@@ -60,4 +60,17 @@ class UserControllerTests {
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("_embedded.errors", Matchers.hasSize(2));
   }
+
+  @Test
+  void testUserCreateAlreadyExistsError(RequestSpecification spec) {
+    String value = "" + System.currentTimeMillis();
+    UserDTO requestBody = UserDTO.builder().id("id" + value).fullName("fullName" + value).build();
+    Mono.from(userRepository.save(UserDAO.builder().id("id" + value).fullName("fullName" + value).build())).block();
+
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().post(baseURI)
+        .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("_embedded.errors.message", Matchers.hasItem("Record [%s] not found!".formatted(requestBody.getId())));
+  }
 }
