@@ -34,7 +34,7 @@ class UserServiceBean implements UserService {
       }
       return Mono.empty();
     });
-    Mono<UserDTO> save = Mono.from(userRepository.save(domain))
+    Mono<UserDTO> save = userRepository.save(domain)
         .map(result -> UserDTO.builder().id(result.getId()).build());
 
     return check.then(save);
