@@ -3,6 +3,7 @@ package com.anasdidi.clinic.config;
 import com.anasdidi.clinic.common.CommonConstants;
 import com.anasdidi.clinic.common.ResponseDTO;
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
+import com.anasdidi.clinic.exception.ValidationException;
 
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
@@ -15,14 +16,27 @@ import jakarta.inject.Singleton;
 public class ExceptionFactory {
 
   @Singleton
+  @Requires(classes = { ValidationException.class })
+  public ExceptionHandler<ValidationException, HttpResponse<ResponseDTO>> validationErrorHandler() {
+    CommonConstants.Error error = CommonConstants.Error.VALIDATION_ERROR;
+    return (request, exception) -> {
+      return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .code(error.code)
+          .message(error.message)
+          .errorList(exception.getErrorList())
+          .build());
+    };
+  }
+
+  @Singleton
   @Requires(classes = { RecordAlreadyExistsException.class })
   public ExceptionHandler<RecordAlreadyExistsException, HttpResponse<ResponseDTO>> recordAlreadyExistsHandler() {
     CommonConstants.Error error = CommonConstants.Error.RECORD_ALREADY_EXISTS;
     return (request, exception) -> {
-      return HttpResponse.status(HttpStatus.BAD_REQUEST)
-          .body(ResponseDTO.builder()
-              .code(error.code)
-              .message(error.message.formatted(exception.getId())).build());
+      return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .code(error.code)
+          .message(error.message.formatted(exception.getId()))
+          .build());
     };
   }
 }

@@ -58,7 +58,9 @@ class UserControllerTests {
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().post(baseURI)
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
-        .body("_embedded.errors", Matchers.hasSize(2));
+        .body("code", Matchers.is("E001"))
+        .body("message", Matchers.is("Validation error!"))
+        .body("errorList", Matchers.hasSize(2));
   }
 
   @Test

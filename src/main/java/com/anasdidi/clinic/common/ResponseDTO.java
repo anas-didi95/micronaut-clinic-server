@@ -1,5 +1,7 @@
 package com.anasdidi.clinic.common;
 
+import java.util.Collection;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,4 +19,5 @@ public class ResponseDTO extends BaseDTO {
   private String status;
   private String code;
   private String message;
+  private Collection<?> errorList;
 }
