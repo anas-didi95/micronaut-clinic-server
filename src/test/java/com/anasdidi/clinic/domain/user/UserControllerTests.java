@@ -71,6 +71,7 @@ class UserControllerTests {
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().post(baseURI)
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
-        .body("_embedded.errors.message", Matchers.hasItem("Record [%s] not found!".formatted(requestBody.getId())));
+        .body("code", Matchers.is("E002"))
+        .body("message", Matchers.is("Record [%s] already exists!".formatted(requestBody.getId())));
   }
 }

@@ -1,34 +1,28 @@
 package com.anasdidi.clinic.config;
 
+import com.anasdidi.clinic.common.CommonConstants;
+import com.anasdidi.clinic.common.ResponseDTO;
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
 
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
-import io.micronaut.http.server.exceptions.response.ErrorContext;
-import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Factory
 public class ExceptionFactory {
 
-  private final ErrorResponseProcessor<?> processor;
-
-  @Inject
-  public ExceptionFactory(ErrorResponseProcessor<?> processor) {
-    this.processor = processor;
-  }
-
   @Singleton
   @Requires(classes = { RecordAlreadyExistsException.class })
-  public ExceptionHandler<RecordAlreadyExistsException, HttpResponse<?>> recordAlreadyExistsHandler() {
+  public ExceptionHandler<RecordAlreadyExistsException, HttpResponse<ResponseDTO>> recordAlreadyExistsHandler() {
+    CommonConstants.Error error = CommonConstants.Error.RECORD_ALREADY_EXISTS;
     return (request, exception) -> {
-      String message = "Record [%s] not found!".formatted(exception.getId());
-      return processor.processResponse(
-          ErrorContext.builder(request).cause(exception).errorMessage(message).build(),
-          HttpResponse.badRequest());
+      return HttpResponse.status(HttpStatus.BAD_REQUEST)
+          .body(ResponseDTO.builder()
+              .code(error.code)
+              .message(error.message.formatted(exception.getId())).build());
     };
   }
 }
