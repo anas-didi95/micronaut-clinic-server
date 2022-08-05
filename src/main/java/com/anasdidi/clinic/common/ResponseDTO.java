@@ -15,4 +15,6 @@ public class ResponseDTO extends BaseDTO {
 
   private String id;
   private String status;
+  private String code;
+  private String message;
 }
