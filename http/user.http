@@ -4,6 +4,7 @@
 POST {{baseUrl}}
 Accept: application/json
 Content-Type: application/json
+Accept-Language: en
 
 {
   "id": "anas",
