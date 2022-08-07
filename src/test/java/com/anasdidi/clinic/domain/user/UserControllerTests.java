@@ -24,10 +24,17 @@ class UserControllerTests {
     this.userRepository = userRepository;
   }
 
+  private UserDTO getRequestBody() {
+    String value = "" + System.currentTimeMillis();
+    return UserDTO.builder()
+        .id("id" + value)
+        .fullName("fullName" + value)
+        .build();
+  }
+
   @Test
   void testUserCreateSuccess(RequestSpecification spec) {
-    String value = "" + System.currentTimeMillis();
-    UserDTO requestBody = UserDTO.builder().id("id" + value).fullName("name" + value).build();
+    UserDTO requestBody = getRequestBody();
     Long beforeCount = Mono.from(userRepository.count()).block();
 
     ResponseDTO responseBody = spec
@@ -51,8 +58,7 @@ class UserControllerTests {
 
   @Test
   void testUserCreateValidationError(RequestSpecification spec) {
-    String value = "";
-    UserDTO requestBody = UserDTO.builder().id(value).fullName(value).build();
+    UserDTO requestBody = UserDTO.builder().build();
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
@@ -65,9 +71,8 @@ class UserControllerTests {
 
   @Test
   void testUserCreateAlreadyExistsError(RequestSpecification spec) {
-    String value = "" + System.currentTimeMillis();
-    UserDTO requestBody = UserDTO.builder().id("id" + value).fullName("fullName" + value).build();
-    Mono.from(userRepository.save(UserDAO.builder().id("id" + value).fullName("fullName" + value).build())).block();
+    UserDTO requestBody = getRequestBody();
+    Mono.from(userRepository.save(UserUtils.copy(requestBody))).block();
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
