@@ -21,15 +21,15 @@ class UserServiceBean implements UserService {
   }
 
   @Override
-  public Mono<UserDTO> create(UserDAO domain) {
+  public Mono<UserDTO> createUser(UserDAO domain) {
     domain.setIsDeleted(false);
     domain.setCreatedBy("SYSTEM");
 
-    logger.debug("[create] domain={}", domain);
+    logger.debug("[createUser] domain={}", domain);
 
     Mono<Void> check = userRepository.existsById(domain.getId()).flatMap(result -> {
       if (result) {
-        logger.error("[create] domain={}", domain);
+        logger.error("[createUser] domain={}", domain);
         return Mono.error(new RecordAlreadyExistsException(domain.getId()));
       }
       return Mono.empty();
@@ -38,5 +38,15 @@ class UserServiceBean implements UserService {
         .map(result -> UserDTO.builder().id(result.getId()).build());
 
     return check.then(save);
+  }
+
+  @Override
+  public Mono<UserDTO> updataUser(String id, UserDAO domain) {
+    domain.setUpdatedBy("SYSTEM");
+
+    logger.debug("[updateUser] domain={}", domain);
+
+    return userRepository.update(domain)
+        .map(result -> UserDTO.builder().id(result.getId()).build());
   }
 }

@@ -70,7 +70,7 @@ class UserControllerTests {
   }
 
   @Test
-  void testUserCreateAlreadyExistsError(RequestSpecification spec) {
+  void testUserCreateRecordAlreadyExistsError(RequestSpecification spec) {
     UserDTO requestBody = getRequestBody();
     Mono.from(userRepository.save(UserUtils.copy(requestBody))).block();
 
@@ -80,5 +80,27 @@ class UserControllerTests {
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("code", Matchers.is("E002"))
         .body("message", Matchers.notNullValue());
+  }
+
+  @Test
+  void testUserUpdateSuccess(RequestSpecification spec) {
+    UserDTO dto = getRequestBody();
+    UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
+    UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
+    requestBody.setVersion(domain.getVersion());
+
+    ResponseDTO responseBody = spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().put("%s/%s".formatted(baseURI, domain.getId()))
+        .then().statusCode(HttpStatus.OK.getCode())
+        .body("id", Matchers.notNullValue())
+        .extract().response().as(ResponseDTO.class);
+
+    UserDAO result = userRepository.findById(responseBody.getId()).block();
+    Assertions.assertNotNull(result);
+    Assertions.assertEquals(requestBody.getFullName(), result.getFullName());
+    Assertions.assertNotNull(result.getUpdatedBy());
+    Assertions.assertNotNull(result.getUpdatedDate());
+    Assertions.assertEquals(domain.getVersion() + 1, result.getVersion());
   }
 }

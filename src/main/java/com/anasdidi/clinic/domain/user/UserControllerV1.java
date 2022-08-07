@@ -7,7 +7,9 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 import jakarta.inject.Inject;
 import reactor.core.publisher.Mono;
 
@@ -28,8 +30,17 @@ class UserControllerV1 {
     return Mono.just(requestBody)
         .map(dto -> UserDAO.builder().id(dto.getId()).fullName(dto.getFullName()).build())
         .flatMap(domain -> userValidator.validate(domain))
-        .flatMap(domain -> userService.create(domain))
+        .flatMap(domain -> userService.createUser(domain))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));
+  }
+
+  @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
+  Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable(value = "id") String id, @Body UserDTO requestBody) {
+    return Mono.just(requestBody)
+        .map(dto -> UserUtils.copy(dto))
+        .flatMap(domain -> userService.updataUser(id, domain))
+        .map(result -> ResponseDTO.builder().id(result.getId()).build())
+        .map(responseBody -> HttpResponse.status(HttpStatus.OK).body(responseBody));
   }
 }

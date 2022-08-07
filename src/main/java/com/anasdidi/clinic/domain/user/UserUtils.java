@@ -6,6 +6,7 @@ final class UserUtils {
     return UserDAO.builder()
         .id(dto.getId())
         .fullName(dto.getFullName())
+        .version(dto.getVersion())
         .build();
   }
 }
