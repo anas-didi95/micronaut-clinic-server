@@ -103,4 +103,20 @@ class UserControllerTests {
     Assertions.assertNotNull(result.getUpdatedDate());
     Assertions.assertEquals(domain.getVersion() + 1, result.getVersion());
   }
+
+  @Test
+  public void testUserUpdateValidationError(RequestSpecification spec) {
+    UserDTO dto = getRequestBody();
+    UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
+    UserDTO requestBody = UserDTO.builder().build();
+    requestBody.setVersion(domain.getVersion());
+
+    spec
+        .accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().put("%s/%s".formatted(baseURI, domain.getId()))
+        .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("code", Matchers.is("E001"))
+        .body("message", Matchers.notNullValue())
+        .body("errorList", Matchers.notNullValue());
+  }
 }

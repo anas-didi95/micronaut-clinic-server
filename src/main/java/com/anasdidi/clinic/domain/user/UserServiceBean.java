@@ -21,32 +21,32 @@ class UserServiceBean implements UserService {
   }
 
   @Override
-  public Mono<UserDTO> createUser(UserDAO domain) {
-    domain.setIsDeleted(false);
-    domain.setCreatedBy("SYSTEM");
+  public Mono<UserDTO> createUser(UserDAO dao) {
+    dao.setIsDeleted(false);
+    dao.setCreatedBy("SYSTEM");
 
-    logger.debug("[createUser] domain={}", domain);
+    logger.debug("[createUser] dao={}", dao);
 
-    Mono<Void> check = userRepository.existsById(domain.getId()).flatMap(result -> {
+    Mono<Void> check = userRepository.existsById(dao.getId()).flatMap(result -> {
       if (result) {
-        logger.error("[createUser] domain={}", domain);
-        return Mono.error(new RecordAlreadyExistsException(domain.getId()));
+        logger.error("[createUser] dao={}", dao);
+        return Mono.error(new RecordAlreadyExistsException(dao.getId()));
       }
       return Mono.empty();
     });
-    Mono<UserDTO> save = userRepository.save(domain)
+    Mono<UserDTO> save = userRepository.save(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());
 
     return check.then(save);
   }
 
   @Override
-  public Mono<UserDTO> updataUser(String id, UserDAO domain) {
-    domain.setUpdatedBy("SYSTEM");
+  public Mono<UserDTO> updataUser(String id, UserDAO dao) {
+    dao.setUpdatedBy("SYSTEM");
 
-    logger.debug("[updateUser] domain={}", domain);
+    logger.debug("[updateUser] dao={}", dao);
 
-    return userRepository.update(domain)
+    return userRepository.update(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());
   }
 }

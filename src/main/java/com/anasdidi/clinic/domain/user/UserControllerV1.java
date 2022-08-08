@@ -29,17 +29,18 @@ class UserControllerV1 {
   Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody) {
     return Mono.just(requestBody)
         .map(dto -> UserDAO.builder().id(dto.getId()).fullName(dto.getFullName()).build())
-        .flatMap(domain -> userValidator.validate(domain))
-        .flatMap(domain -> userService.createUser(domain))
+        .flatMap(dao -> userValidator.validate(dao))
+        .flatMap(dao -> userService.createUser(dao))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));
   }
 
   @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
-  Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable(value = "id") String id, @Body UserDTO requestBody) {
+  Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody) {
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))
-        .flatMap(domain -> userService.updataUser(id, domain))
+        .flatMap(dao -> userValidator.validate(dao))
+        .flatMap(dao -> userService.updataUser(id, dao))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.OK).body(responseBody));
   }
