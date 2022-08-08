@@ -1,4 +1,5 @@
 @baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic/v1/user
+@userId = {{create.response.body.$.id}}
 
 // @name create
 POST {{baseUrl}}
@@ -9,4 +10,17 @@ Accept-Language: en
 {
   "id": "anas",
   "fullName": "Anas Juwaidi"
+}
+
+###
+
+// @name update
+PUT {{baseUrl}}/{{userId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anas",
+  "fullName": "Anas Juwaidi Mohd Jeffry",
+  "version": 0
 }
