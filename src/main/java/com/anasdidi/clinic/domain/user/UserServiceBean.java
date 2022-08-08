@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
+import com.anasdidi.clinic.exception.RecordNotFoundException;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -46,7 +47,14 @@ class UserServiceBean implements UserService {
 
     logger.debug("[updateUser] dao={}", dao);
 
-    return userRepository.update(dao)
+    Mono<UserDAO> check = userRepository.findById(id)
+        .switchIfEmpty(Mono.defer(() -> {
+          logger.error("[updateUser] id={}", id);
+          return Mono.error(new RecordNotFoundException(id));
+        }));
+    Mono<UserDTO> update = userRepository.update(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());
+
+    return check.then(update);
   }
 }

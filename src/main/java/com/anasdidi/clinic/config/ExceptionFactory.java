@@ -3,6 +3,7 @@ package com.anasdidi.clinic.config;
 import com.anasdidi.clinic.common.CommonConstants;
 import com.anasdidi.clinic.common.ResponseDTO;
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
+import com.anasdidi.clinic.exception.RecordNotFoundException;
 import com.anasdidi.clinic.exception.ValidationException;
 
 import io.micronaut.context.LocalizedMessageSource;
@@ -41,6 +42,18 @@ public class ExceptionFactory {
   @Requires(classes = { RecordAlreadyExistsException.class })
   public ExceptionHandler<RecordAlreadyExistsException, HttpResponse<ResponseDTO>> recordAlreadyExistsHandler() {
     CommonConstants.Error error = CommonConstants.Error.RECORD_ALREADY_EXISTS;
+    return (request, exception) -> {
+      return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .code(error.code)
+          .message(getErrorMessage(error, exception.getId()))
+          .build());
+    };
+  }
+
+  @Singleton
+  @Requires(classes = { RecordNotFoundException.class })
+  public ExceptionHandler<RecordNotFoundException, HttpResponse<ResponseDTO>> recordNotFoundHandler() {
+    CommonConstants.Error error = CommonConstants.Error.RECORD_NOT_FOUND;
     return (request, exception) -> {
       return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
           .code(error.code)

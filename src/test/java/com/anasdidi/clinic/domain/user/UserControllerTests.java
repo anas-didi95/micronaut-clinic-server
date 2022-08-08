@@ -119,4 +119,19 @@ class UserControllerTests {
         .body("message", Matchers.notNullValue())
         .body("errorList", Matchers.notNullValue());
   }
+
+  @Test
+  public void testUserUpdateRecordNotFoundError(RequestSpecification spec) {
+    UserDTO dto = getRequestBody();
+    UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
+    UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
+    requestBody.setVersion(domain.getVersion());
+
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().put("%s/%s".formatted(baseURI, System.currentTimeMillis()))
+        .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("code", Matchers.is("E003"))
+        .body("message", Matchers.notNullValue());
+  }
 }
