@@ -20,4 +20,5 @@ public class ResponseDTO extends BaseDTO {
   private String code;
   private String message;
   private Collection<?> errorList;
+  private String traceId;
 }

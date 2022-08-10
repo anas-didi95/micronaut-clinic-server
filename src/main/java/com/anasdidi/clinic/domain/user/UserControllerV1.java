@@ -1,5 +1,6 @@
 package com.anasdidi.clinic.domain.user;
 
+import com.anasdidi.clinic.common.BaseController;
 import com.anasdidi.clinic.common.ResponseDTO;
 
 import io.micronaut.http.HttpResponse;
@@ -14,7 +15,7 @@ import jakarta.inject.Inject;
 import reactor.core.publisher.Mono;
 
 @Controller(value = "/v1/user")
-class UserControllerV1 {
+class UserControllerV1 extends BaseController {
 
   private final UserService userService;
   private final UserValidator userValidator;
@@ -27,20 +28,24 @@ class UserControllerV1 {
 
   @Post(value = "/", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
   Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody) {
+    String traceId = generateTraceId();
+
     return Mono.just(requestBody)
-        .map(dto -> UserDAO.builder().id(dto.getId()).fullName(dto.getFullName()).build())
-        .flatMap(dao -> userValidator.validate(dao))
-        .flatMap(dao -> userService.createUser(dao))
+        .map(dto -> UserUtils.copy(dto))
+        .flatMap(dao -> userValidator.validate(dao, traceId))
+        .flatMap(dao -> userService.createUser(dao, traceId))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));
   }
 
   @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
   Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody) {
+    String traceId = generateTraceId();
+
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))
-        .flatMap(dao -> userValidator.validate(dao))
-        .flatMap(dao -> userService.updataUser(id, dao))
+        .flatMap(dao -> userValidator.validate(dao, traceId))
+        .flatMap(dao -> userService.updataUser(id, dao, traceId))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.OK).body(responseBody));
   }

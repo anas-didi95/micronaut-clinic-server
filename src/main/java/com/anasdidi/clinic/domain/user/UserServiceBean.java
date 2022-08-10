@@ -22,16 +22,16 @@ class UserServiceBean implements UserService {
   }
 
   @Override
-  public Mono<UserDTO> createUser(UserDAO dao) {
+  public Mono<UserDTO> createUser(UserDAO dao, String traceId) {
     dao.setIsDeleted(false);
     dao.setCreatedBy("SYSTEM");
 
-    logger.debug("[createUser] dao={}", dao);
+    logger.debug("[{}:createUser] dao={}", traceId, dao);
 
     Mono<Void> check = userRepository.existsById(dao.getId()).flatMap(result -> {
       if (result) {
-        logger.error("[createUser] dao={}", dao);
-        return Mono.error(new RecordAlreadyExistsException(dao.getId()));
+        logger.error("[{}:createUser] dao={}", traceId, dao);
+        return Mono.error(new RecordAlreadyExistsException(traceId, dao.getId()));
       }
       return Mono.empty();
     });
@@ -42,15 +42,15 @@ class UserServiceBean implements UserService {
   }
 
   @Override
-  public Mono<UserDTO> updataUser(String id, UserDAO dao) {
+  public Mono<UserDTO> updataUser(String id, UserDAO dao, String traceId) {
     dao.setUpdatedBy("SYSTEM");
 
-    logger.debug("[updateUser] dao={}", dao);
+    logger.debug("[{}:updateUser] dao={}", traceId, dao);
 
     Mono<UserDAO> check = userRepository.findById(id)
         .switchIfEmpty(Mono.defer(() -> {
-          logger.error("[updateUser] id={}", id);
-          return Mono.error(new RecordNotFoundException(id));
+          logger.error("[{}:updateUser] dao={}", traceId, dao);
+          return Mono.error(new RecordNotFoundException(traceId, id));
         }));
     Mono<UserDTO> update = userRepository.update(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());

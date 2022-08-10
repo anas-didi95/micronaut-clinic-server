@@ -4,7 +4,7 @@ import reactor.core.publisher.Mono;
 
 public interface UserService {
 
-  Mono<UserDTO> createUser(UserDAO dao);
+  Mono<UserDTO> createUser(UserDAO dao, String traceId);
 
-  Mono<UserDTO> updataUser(String id, UserDAO dao);
+  Mono<UserDTO> updataUser(String id, UserDAO dao, String traceId);
 }

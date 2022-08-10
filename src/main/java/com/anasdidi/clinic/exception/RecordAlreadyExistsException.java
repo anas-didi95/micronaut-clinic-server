@@ -1,16 +1,21 @@
 package com.anasdidi.clinic.exception;
 
-import lombok.AllArgsConstructor;
+import com.anasdidi.clinic.common.BaseException;
+
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class RecordAlreadyExistsException extends Exception {
+public class RecordAlreadyExistsException extends BaseException {
 
   private final String id;
 
+  public RecordAlreadyExistsException(String traceId, String id) {
+    super(traceId);
+    this.id = id;
+  }
+
   @Override
   public String getMessage() {
-    return "id=%s".formatted(id);
+    return "traceId=%s, id=%s".formatted(traceId, id);
   }
 }

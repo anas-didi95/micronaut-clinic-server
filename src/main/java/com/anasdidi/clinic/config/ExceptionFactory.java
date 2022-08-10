@@ -3,6 +3,7 @@ package com.anasdidi.clinic.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.anasdidi.clinic.common.BaseException;
 import com.anasdidi.clinic.common.CommonConstants;
 import com.anasdidi.clinic.common.ResponseDTO;
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
@@ -38,6 +39,7 @@ public class ExceptionFactory {
       logError("validationErrorHandler", error, message, exception);
 
       return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .traceId(exception.getTraceId())
           .code(error.code)
           .message(message)
           .errorList(exception.getErrorList())
@@ -54,6 +56,7 @@ public class ExceptionFactory {
       logError("recordAlreadyExistsHandler", error, message, exception);
 
       return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .traceId(exception.getTraceId())
           .code(error.code)
           .message(message)
           .build());
@@ -69,6 +72,7 @@ public class ExceptionFactory {
       logError("recordNotFoundHandler", error, message, exception);
 
       return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .traceId(exception.getTraceId())
           .code(error.code)
           .message(message)
           .build());
@@ -81,7 +85,7 @@ public class ExceptionFactory {
         .orElse("Error Code [%s]!".formatted(error.code));
   }
 
-  private void logError(String methodName, CommonConstants.Error error, String message, Exception exception) {
-    logger.error("[{}] code={}, message={}", methodName, error.code, message, exception);
+  private void logError(String methodName, CommonConstants.Error error, String message, BaseException exception) {
+    logger.error("[{}:{}] code={}, message={}", exception.getTraceId(), methodName, error.code, message, exception);
   }
 }

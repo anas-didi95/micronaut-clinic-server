@@ -64,6 +64,7 @@ class UserControllerTests {
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().post(baseURI)
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("traceId", Matchers.notNullValue())
         .body("code", Matchers.is("E001"))
         .body("message", Matchers.notNullValue())
         .body("errorList", Matchers.notNullValue());
@@ -78,6 +79,7 @@ class UserControllerTests {
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().post(baseURI)
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("traceId", Matchers.notNullValue())
         .body("code", Matchers.is("E002"))
         .body("message", Matchers.notNullValue());
   }
@@ -115,6 +117,7 @@ class UserControllerTests {
         .accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().put("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("traceId", Matchers.notNullValue())
         .body("code", Matchers.is("E001"))
         .body("message", Matchers.notNullValue())
         .body("errorList", Matchers.notNullValue());
@@ -131,6 +134,7 @@ class UserControllerTests {
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().put("%s/%s".formatted(baseURI, System.currentTimeMillis()))
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("traceId", Matchers.notNullValue())
         .body("code", Matchers.is("E003"))
         .body("message", Matchers.notNullValue());
   }

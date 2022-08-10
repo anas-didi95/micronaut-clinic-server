@@ -21,13 +21,13 @@ public abstract class BaseValidator<T extends BaseDAO> {
     this.validator = validator;
   }
 
-  public Mono<T> validate(T dao) {
+  public Mono<T> validate(T dao, String traceId) {
     return Mono.defer(() -> {
       Set<ConstraintViolation<T>> errorSet = validator.validate(dao);
 
       if (!errorSet.isEmpty()) {
         return Mono.error(
-            new ValidationException(errorSet.stream()
+            new ValidationException(traceId, errorSet.stream()
                 .map(this::buildMessage)
                 .collect(Collectors.toList())));
       }

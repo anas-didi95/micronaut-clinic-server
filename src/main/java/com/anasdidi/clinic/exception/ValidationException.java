@@ -2,17 +2,22 @@ package com.anasdidi.clinic.exception;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
+import com.anasdidi.clinic.common.BaseException;
+
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class ValidationException extends Exception {
+public class ValidationException extends BaseException {
 
   private final List<String> errorList;
 
+  public ValidationException(String traceId, List<String> errorList) {
+    super(traceId);
+    this.errorList = errorList;
+  }
+
   @Override
   public String getMessage() {
-    return "errorList.size=%s".formatted(errorList.size());
+    return "traceId=%s, errorList.size=%s".formatted(traceId, errorList.size());
   }
 }
