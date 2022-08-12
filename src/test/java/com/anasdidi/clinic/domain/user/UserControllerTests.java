@@ -138,4 +138,20 @@ class UserControllerTests {
         .body("code", Matchers.is("E003"))
         .body("message", Matchers.notNullValue());
   }
+
+  @Test
+  public void testUserRecordMetadataNotMatched(RequestSpecification spec) {
+    UserDTO dto = getRequestBody();
+    UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
+    UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
+    requestBody.setVersion(-1L);
+
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().put("%s/%s".formatted(baseURI, domain.getId()))
+        .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("traceId", Matchers.notNullValue())
+        .body("code", Matchers.is("E004"))
+        .body("message", Matchers.notNullValue());
+  }
 }

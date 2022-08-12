@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
+import com.anasdidi.clinic.exception.RecordMetadataNotMatchedException;
 import com.anasdidi.clinic.exception.RecordNotFoundException;
 
 import jakarta.inject.Inject;
@@ -47,11 +48,19 @@ class UserServiceBean implements UserService {
 
     logger.debug("[{}:updateUser] dao={}", traceId, dao);
 
-    Mono<UserDAO> check = userRepository.findById(id)
+    Mono<Void> check = userRepository.findById(id)
         .switchIfEmpty(Mono.defer(() -> {
           logger.error("[{}:updateUser] dao={}", traceId, dao);
           return Mono.error(new RecordNotFoundException(traceId, id));
-        }));
+        }))
+        .flatMap(db -> {
+          if (!(db.getId().equals(dao.getId()) && db.getVersion() == dao.getVersion())) {
+            logger.error("[{}:updateUser] dao={}", traceId, dao);
+            return Mono.error(new RecordMetadataNotMatchedException(traceId, db.getId(), db.getVersion(), dao.getId(),
+                dao.getVersion()));
+          }
+          return Mono.empty();
+        });
     Mono<UserDTO> update = userRepository.update(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());
 

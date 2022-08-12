@@ -7,6 +7,7 @@ import com.anasdidi.clinic.common.BaseException;
 import com.anasdidi.clinic.common.CommonConstants;
 import com.anasdidi.clinic.common.ResponseDTO;
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
+import com.anasdidi.clinic.exception.RecordMetadataNotMatchedException;
 import com.anasdidi.clinic.exception.RecordNotFoundException;
 import com.anasdidi.clinic.exception.ValidationException;
 
@@ -70,6 +71,22 @@ public class ExceptionFactory {
     return (request, exception) -> {
       String message = getErrorMessage(error, exception.getId());
       logError("recordNotFoundHandler", error, message, exception);
+
+      return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
+          .traceId(exception.getTraceId())
+          .code(error.code)
+          .message(message)
+          .build());
+    };
+  }
+
+  @Singleton
+  @Requires(classes = { RecordMetadataNotMatchedException.class })
+  public ExceptionHandler<RecordMetadataNotMatchedException, HttpResponse<ResponseDTO>> recordMetadataNotMatchedHandler() {
+    CommonConstants.Error error = CommonConstants.Error.RECORD_METADATA_NOT_MATCHED;
+    return (request, exception) -> {
+      String message = getErrorMessage(error);
+      logError("recordMetadataNotMatchedHandler", error, message, exception);
 
       return HttpResponse.status(HttpStatus.BAD_REQUEST).body(ResponseDTO.builder()
           .traceId(exception.getTraceId())
