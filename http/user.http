@@ -24,3 +24,15 @@ Content-Type: application/json
   "fullName": "Anas Juwaidi Mohd Jeffry",
   "version": 0
 }
+
+###
+
+// @name delete
+DELETE {{baseUrl}}/{{userId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anas",
+  "version": 0
+}

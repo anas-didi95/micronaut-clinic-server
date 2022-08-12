@@ -154,4 +154,21 @@ class UserControllerTests {
         .body("code", Matchers.is("E004"))
         .body("message", Matchers.notNullValue());
   }
+
+  @Test
+  public void testUserDeleteSuccess(RequestSpecification spec) {
+    UserDTO dto = getRequestBody();
+    UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
+    UserDTO requestBody = UserDTO.builder().id(domain.getId()).build();
+    requestBody.setVersion(domain.getVersion());
+    Long beforeCount = userRepository.count().block();
+
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().delete("%s/%s".formatted(baseURI, domain.getId()))
+        .then().statusCode(HttpStatus.NO_CONTENT.getCode());
+
+    Long afterCount = userRepository.count().block();
+    Assertions.assertEquals(beforeCount - 1, afterCount);
+  }
 }

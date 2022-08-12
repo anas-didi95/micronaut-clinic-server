@@ -8,6 +8,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
@@ -48,5 +49,15 @@ class UserControllerV1 extends BaseController {
         .flatMap(dao -> userService.updataUser(id, dao, traceId))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.OK).body(responseBody));
+  }
+
+  @Delete(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
+  Mono<HttpResponse<Void>> deleteUser(@PathVariable String id, @Body UserDTO requestBody) {
+    String traceId = generateTraceId();
+
+    return Mono.just(requestBody)
+        .map(dto -> UserUtils.copy(dto))
+        .flatMap(dao -> userService.deleteUser(id, dao, traceId))
+        .map(result -> HttpResponse.status(HttpStatus.NO_CONTENT));
   }
 }
