@@ -27,10 +27,10 @@ r2dbc:
 liquibase:
   datasources:
     default:
-      enabled: true
+      enabled: false
       change-log: classpath:/db/changelog/db.changelog-main.xml
 
 endpoints:
   liquibase:
-    enabled: true
+    enabled: false
     sensitive: false
