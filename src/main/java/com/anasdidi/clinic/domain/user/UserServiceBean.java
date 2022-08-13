@@ -31,7 +31,6 @@ class UserServiceBean implements UserService {
 
     Mono<Void> check = userRepository.existsById(dao.getId()).flatMap(result -> {
       if (result) {
-        logger.error("[{}:createUser] dao={}", traceId, dao);
         return Mono.error(new RecordAlreadyExistsException(traceId, dao.getId()));
       }
       return Mono.empty();
@@ -39,7 +38,7 @@ class UserServiceBean implements UserService {
     Mono<UserDTO> save = userRepository.save(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());
 
-    return check.then(save);
+    return check.then(save).doOnError(error -> logger.error("[{}:createUser] dao={}", traceId, dao));
   }
 
   @Override
@@ -50,12 +49,10 @@ class UserServiceBean implements UserService {
 
     Mono<Void> check = userRepository.findById(id)
         .switchIfEmpty(Mono.defer(() -> {
-          logger.error("[{}:updateUser] id={}, dao={}", traceId, id, dao);
           return Mono.error(new RecordNotFoundException(traceId, id));
         }))
         .flatMap(db -> {
           if (!(db.getId().equals(dao.getId()) && db.getVersion() == dao.getVersion())) {
-            logger.error("[{}:updateUser] id={}, dao={}", traceId, id, dao);
             return Mono.error(new RecordMetadataNotMatchedException(traceId, db.getId(), db.getVersion(), dao.getId(),
                 dao.getVersion()));
           }
@@ -64,12 +61,24 @@ class UserServiceBean implements UserService {
     Mono<UserDTO> update = userRepository.update(dao)
         .map(result -> UserDTO.builder().id(result.getId()).build());
 
-    return check.then(update);
+    return check.then(update).doOnError(error -> logger.debug("[{}:updateUser] id={}, dao={}", traceId, id, dao));
   }
 
   @Override
   public Mono<Long> deleteUser(String id, UserDAO dao, String traceId) {
     logger.debug("[{}:deleteUser] id={}, dao={}", traceId, id, dao);
-    return userRepository.deleteById(id);
+
+    Mono<Void> check = userRepository.findById(id)
+        .switchIfEmpty(Mono.defer(() -> Mono.error(new RecordNotFoundException(traceId, id))))
+        .flatMap(db -> {
+          if (!(db.getId().equals(dao.getId()) && db.getVersion() == dao.getVersion())) {
+            return Mono.error(new RecordMetadataNotMatchedException(traceId, db.getId(), db.getVersion(), dao.getId(),
+                dao.getVersion()));
+          }
+          return Mono.empty();
+        });
+    Mono<Long> delete = userRepository.deleteById(id);
+
+    return check.then(delete).doOnError(error -> logger.error("[{}:deleteUser] id={}, dao={}", traceId, id, dao));
   }
 }

@@ -140,7 +140,7 @@ class UserControllerTests {
   }
 
   @Test
-  public void testUserRecordMetadataNotMatched(RequestSpecification spec) {
+  public void testUserRecordMetadataNotMatchedError(RequestSpecification spec) {
     UserDTO dto = getRequestBody();
     UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
     UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
@@ -170,5 +170,21 @@ class UserControllerTests {
 
     Long afterCount = userRepository.count().block();
     Assertions.assertEquals(beforeCount - 1, afterCount);
+  }
+
+  @Test
+  public void testUserDeleteRecordMetadataNotMatchedError(RequestSpecification spec) {
+    UserDTO dto = getRequestBody();
+    UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
+    UserDTO requestBody = UserDTO.builder().id(domain.getId()).build();
+    requestBody.setVersion(-1L);
+
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .when().delete("%s/%s".formatted(baseURI, domain.getId()))
+        .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
+        .body("traceId", Matchers.notNullValue())
+        .body("code", Matchers.is("E004"))
+        .body("message", Matchers.notNullValue());
   }
 }
