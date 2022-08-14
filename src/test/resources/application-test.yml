@@ -1,5 +1,5 @@
 liquibase:
   datasources:
     default:
-      enabled: false
+      enabled: true
       drop-first: true
