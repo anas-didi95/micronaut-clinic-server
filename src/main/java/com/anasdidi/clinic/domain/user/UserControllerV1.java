@@ -5,18 +5,12 @@ import com.anasdidi.clinic.common.ResponseDTO;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
 import jakarta.inject.Inject;
 import reactor.core.publisher.Mono;
 
 @Controller(value = "/v1/user")
-class UserControllerV1 extends BaseController {
+class UserControllerV1 extends BaseController implements UserController {
 
   private final UserService userService;
   private final UserValidator userValidator;
@@ -27,8 +21,8 @@ class UserControllerV1 extends BaseController {
     this.userValidator = userValidator;
   }
 
-  @Post(value = "/", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
-  Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody) {
+  @Override
+  public Mono<HttpResponse<ResponseDTO>> createUser(UserDTO requestBody) {
     String traceId = generateTraceId();
 
     return Mono.just(requestBody)
@@ -39,8 +33,8 @@ class UserControllerV1 extends BaseController {
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));
   }
 
-  @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
-  Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody) {
+  @Override
+  public Mono<HttpResponse<ResponseDTO>> updateUser(String id, UserDTO requestBody) {
     String traceId = generateTraceId();
 
     return Mono.just(requestBody)
@@ -51,8 +45,8 @@ class UserControllerV1 extends BaseController {
         .map(responseBody -> HttpResponse.status(HttpStatus.OK).body(responseBody));
   }
 
-  @Delete(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
-  Mono<HttpResponse<Void>> deleteUser(@PathVariable String id, @Body UserDTO requestBody) {
+  @Override
+  public Mono<HttpResponse<Void>> deleteUser(String id, UserDTO requestBody) {
     String traceId = generateTraceId();
 
     return Mono.just(requestBody)
