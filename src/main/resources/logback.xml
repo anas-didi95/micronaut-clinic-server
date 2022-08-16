@@ -20,7 +20,7 @@
       <totalSizeCap>3GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%rEx}</pattern>
+      <pattern>%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} --- [%20.20t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%rEx}</pattern>
     </encoder>
   </appender>
 
