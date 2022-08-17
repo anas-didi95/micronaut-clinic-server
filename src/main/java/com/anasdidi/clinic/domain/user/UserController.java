@@ -9,16 +9,28 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 
 interface UserController {
 
   @Post(value = "/", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
+  @Operation(description = "Create User")
+  @Tag(name = "user")
+  @ApiResponse(responseCode = "201", description = "Created")
   Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody);
 
   @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
+  @Operation(description = "Update User")
+  @Tag(name = "user")
+  @ApiResponse(responseCode = "200", description = "Ok")
   Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody);
 
   @Delete(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
+  @Operation(description = "Delete User")
+  @Tag(name = "user")
+  @ApiResponse(responseCode = "204", description = "No Content")
   Mono<HttpResponse<Void>> deleteUser(@PathVariable String id, @Body UserDTO requestBody);
 }
