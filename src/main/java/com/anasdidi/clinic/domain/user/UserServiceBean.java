@@ -36,7 +36,7 @@ class UserServiceBean implements UserService {
       return Mono.empty();
     });
     Mono<UserDTO> save = userRepository.save(dao)
-        .map(result -> UserDTO.builder().id(result.getId()).build());
+        .map(UserUtils::copy);
 
     return check.then(save).doOnError(error -> logger.error("[{}:createUser] dao={}", traceId, dao));
   }
@@ -59,7 +59,7 @@ class UserServiceBean implements UserService {
           return Mono.empty();
         });
     Mono<UserDTO> update = userRepository.update(dao)
-        .map(result -> UserDTO.builder().id(result.getId()).build());
+        .map(UserUtils::copy);
 
     return check.then(update).doOnError(error -> logger.debug("[{}:updateUser] id={}, dao={}", traceId, id, dao));
   }
