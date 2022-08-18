@@ -1,7 +1,6 @@
 package com.anasdidi.clinic.domain.user;
 
 import com.anasdidi.clinic.common.BaseController;
-import com.anasdidi.clinic.common.ResponseDTO;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -22,26 +21,24 @@ class UserControllerV1 extends BaseController implements UserController {
   }
 
   @Override
-  public Mono<HttpResponse<ResponseDTO>> createUser(UserDTO requestBody) {
+  public Mono<HttpResponse<UserDTO>> createUser(UserDTO requestBody) {
     String traceId = generateTraceId();
 
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))
         .flatMap(dao -> userValidator.validate(dao, traceId))
         .flatMap(dao -> userService.createUser(dao, traceId))
-        .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.CREATED).body(responseBody));
   }
 
   @Override
-  public Mono<HttpResponse<ResponseDTO>> updateUser(String id, UserDTO requestBody) {
+  public Mono<HttpResponse<UserDTO>> updateUser(String id, UserDTO requestBody) {
     String traceId = generateTraceId();
 
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))
         .flatMap(dao -> userValidator.validate(dao, traceId))
         .flatMap(dao -> userService.updataUser(id, dao, traceId))
-        .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> HttpResponse.status(HttpStatus.OK).body(responseBody));
   }
 

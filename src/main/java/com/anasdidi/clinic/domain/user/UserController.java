@@ -1,7 +1,5 @@
 package com.anasdidi.clinic.domain.user;
 
-import com.anasdidi.clinic.common.ResponseDTO;
-
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
@@ -20,13 +18,13 @@ interface UserController {
   @Operation(description = "Create User")
   @Tag(name = "user")
   @ApiResponse(responseCode = "201", description = "Created")
-  Mono<HttpResponse<ResponseDTO>> createUser(@Body UserDTO requestBody);
+  Mono<HttpResponse<UserDTO>> createUser(@Body UserDTO requestBody);
 
   @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
   @Operation(description = "Update User")
   @Tag(name = "user")
   @ApiResponse(responseCode = "200", description = "Ok")
-  Mono<HttpResponse<ResponseDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody);
+  Mono<HttpResponse<UserDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody);
 
   @Delete(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
   @Operation(description = "Delete User")
