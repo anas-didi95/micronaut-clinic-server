@@ -4,8 +4,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.anasdidi.clinic.common.ResponseDTO;
-
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
@@ -37,12 +35,12 @@ class UserControllerTests {
     UserDTO requestBody = getRequestBody();
     Long beforeCount = Mono.from(userRepository.count()).block();
 
-    ResponseDTO responseBody = spec
+    UserDTO responseBody = spec
         .given().body(requestBody).accept(ContentType.JSON).contentType(ContentType.JSON)
         .when().post(baseURI)
         .then().statusCode(HttpStatus.CREATED.getCode())
         .body("id", Matchers.notNullValue())
-        .extract().response().body().as(ResponseDTO.class);
+        .extract().response().body().as(UserDTO.class);
 
     Long afterCount = Mono.from(userRepository.count()).block();
     Assertions.assertEquals(beforeCount + 1, afterCount);
@@ -91,12 +89,12 @@ class UserControllerTests {
     UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
     requestBody.setVersion(domain.getVersion());
 
-    ResponseDTO responseBody = spec
+    UserDTO responseBody = spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
         .when().put("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.OK.getCode())
         .body("id", Matchers.notNullValue())
-        .extract().response().as(ResponseDTO.class);
+        .extract().response().as(UserDTO.class);
 
     UserDAO result = userRepository.findById(responseBody.getId()).block();
     Assertions.assertNotNull(result);

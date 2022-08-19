@@ -2,15 +2,19 @@ package com.anasdidi.clinic.domain.user;
 
 import com.anasdidi.clinic.common.BaseDTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Value
-@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Getter
+@ToString
 public class UserDTO extends BaseDTO {
 
-  private final String id;
-  private final String fullName;
+  private String id;
+  private String fullName;
 }
