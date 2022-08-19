@@ -24,10 +24,11 @@ class UserControllerTests {
 
   private UserDTO getRequestBody() {
     String value = "" + System.currentTimeMillis();
-    return UserDTO.builder()
-        .id("id" + value)
+    UserDTO requestBody = UserDTO.builder()
         .fullName("fullName" + value)
         .build();
+    requestBody.setId("id" + value);
+    return requestBody;
   }
 
   @Test
@@ -86,7 +87,8 @@ class UserControllerTests {
   void testUserUpdateSuccess(RequestSpecification spec) {
     UserDTO dto = getRequestBody();
     UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
-    UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
+    UserDTO requestBody = UserDTO.builder().fullName("update" + System.currentTimeMillis()).build();
+    requestBody.setId(domain.getId());
     requestBody.setVersion(domain.getVersion());
 
     UserDTO responseBody = spec
@@ -125,7 +127,8 @@ class UserControllerTests {
   public void testUserUpdateRecordNotFoundError(RequestSpecification spec) {
     UserDTO dto = getRequestBody();
     UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
-    UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
+    UserDTO requestBody = UserDTO.builder().fullName("update" + System.currentTimeMillis()).build();
+    requestBody.setId(domain.getId());
     requestBody.setVersion(domain.getVersion());
 
     spec
@@ -141,7 +144,8 @@ class UserControllerTests {
   public void testUserRecordMetadataNotMatchedError(RequestSpecification spec) {
     UserDTO dto = getRequestBody();
     UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
-    UserDTO requestBody = UserDTO.builder().id(domain.getId()).fullName("update" + System.currentTimeMillis()).build();
+    UserDTO requestBody = UserDTO.builder().fullName("update" + System.currentTimeMillis()).build();
+    requestBody.setId(domain.getId());
     requestBody.setVersion(-1L);
 
     spec
@@ -157,7 +161,8 @@ class UserControllerTests {
   public void testUserDeleteSuccess(RequestSpecification spec) {
     UserDTO dto = getRequestBody();
     UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
-    UserDTO requestBody = UserDTO.builder().id(domain.getId()).build();
+    UserDTO requestBody = UserDTO.builder().build();
+    requestBody.setId(domain.getId());
     requestBody.setVersion(domain.getVersion());
     Long beforeCount = userRepository.count().block();
 
@@ -174,7 +179,8 @@ class UserControllerTests {
   public void testUserDeleteRecordMetadataNotMatchedError(RequestSpecification spec) {
     UserDTO dto = getRequestBody();
     UserDAO domain = userRepository.save(UserUtils.copy(dto)).block();
-    UserDTO requestBody = UserDTO.builder().id(domain.getId()).build();
+    UserDTO requestBody = UserDTO.builder().build();
+    requestBody.setId(domain.getId());
     requestBody.setVersion(-1L);
 
     spec

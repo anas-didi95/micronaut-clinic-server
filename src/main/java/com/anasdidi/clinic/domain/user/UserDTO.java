@@ -15,6 +15,5 @@ import lombok.ToString;
 @ToString
 public class UserDTO extends BaseDTO {
 
-  private String id;
   private String fullName;
 }

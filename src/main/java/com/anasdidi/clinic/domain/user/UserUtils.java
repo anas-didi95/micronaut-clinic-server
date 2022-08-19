@@ -4,9 +4,9 @@ final class UserUtils {
 
   static UserDAO copy(UserDTO in) {
     UserDAO out = UserDAO.builder()
-        .id(in.getId())
         .fullName(in.getFullName())
         .build();
+    out.setId(in.getId());
     out.setCreatedBy(in.getCreatedBy());
     out.setCreatedDate(in.getCreatedDate());
     out.setUpdatedBy(in.getUpdatedBy());
@@ -17,9 +17,9 @@ final class UserUtils {
 
   static UserDTO copy(UserDAO in) {
     UserDTO out = UserDTO.builder()
-        .id(in.getId())
         .fullName(in.getFullName())
         .build();
+    out.setId(in.getId());
     out.setCreatedBy(in.getCreatedBy());
     out.setCreatedDate(in.getCreatedDate());
     out.setUpdatedBy(in.getUpdatedBy());

@@ -1,4 +1,4 @@
 package com.anasdidi.clinic.common;
 
-public abstract class BaseDAO {
+public abstract class BaseDAO implements IRecordMetadata {
 }
