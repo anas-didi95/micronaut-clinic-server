@@ -11,11 +11,11 @@ import lombok.Setter;
 @Setter
 public abstract class BaseDTO implements IRecordMetadata {
 
-  protected String id;
-  protected Boolean isDeleted;
-  protected Instant createdDate;
-  protected String createdBy;
-  protected Instant updatedDate;
-  protected String updatedBy;
-  protected Long version;
+  private String id;
+  private Boolean isDeleted;
+  private Instant createdDate;
+  private String createdBy;
+  private Instant updatedDate;
+  private String updatedBy;
+  private Long version;
 }
