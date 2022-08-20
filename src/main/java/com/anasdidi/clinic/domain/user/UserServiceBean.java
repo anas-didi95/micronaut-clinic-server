@@ -25,7 +25,6 @@ class UserServiceBean implements UserService {
   @Override
   public Mono<UserDTO> createUser(UserDAO dao, String traceId) {
     dao.setIsDeleted(false);
-    dao.setCreatedBy("SYSTEM");
 
     logger.debug("[{}:createUser] dao={}", traceId, dao);
 
@@ -43,8 +42,6 @@ class UserServiceBean implements UserService {
 
   @Override
   public Mono<UserDTO> updataUser(String id, UserDAO dao, String traceId) {
-    dao.setUpdatedBy("SYSTEM");
-
     logger.debug("[{}:updateUser] id={}, dao={}", traceId, id, dao);
 
     Mono<Void> check = userRepository.findById(id)
