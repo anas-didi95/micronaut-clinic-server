@@ -12,10 +12,12 @@ import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.annotation.Version;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Introspected
 @Getter
 @Setter
+@ToString
 public abstract class BaseDAO implements IRecordMetadata {
 
   @Id

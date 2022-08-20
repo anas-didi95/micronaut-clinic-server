@@ -58,7 +58,7 @@ class UserServiceBean implements UserService {
     Mono<UserDTO> update = userRepository.update(dao)
         .map(UserUtils::copy);
 
-    return check.then(update).doOnError(error -> logger.debug("[{}:updateUser] id={}, dao={}", traceId, id, dao));
+    return check.then(update).doOnError(error -> logger.error("[{}:updateUser] id={}, dao={}", traceId, id, dao));
   }
 
   @Override

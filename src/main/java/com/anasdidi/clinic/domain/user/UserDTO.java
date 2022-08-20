@@ -14,7 +14,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class UserDTO extends BaseDTO {
 
   private String fullName;

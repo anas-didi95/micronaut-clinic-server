@@ -5,10 +5,12 @@ import java.time.Instant;
 import io.micronaut.core.annotation.Introspected;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Introspected
 @Getter
 @Setter
+@ToString
 public abstract class BaseDTO implements IRecordMetadata {
 
   private String id;

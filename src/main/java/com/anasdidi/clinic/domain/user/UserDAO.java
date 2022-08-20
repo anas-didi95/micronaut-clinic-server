@@ -18,7 +18,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @MappedEntity(value = "t_user")
 class UserDAO extends BaseDAO {
 
