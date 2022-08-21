@@ -1,4 +1,4 @@
-package com.anasdidi.clinic.common;
+package com.anasdidi.clinic.exception;
 
 import java.util.Collection;
 
@@ -6,17 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
-public class ResponseDTO extends BaseDTO {
+public class ErrorResponseDTO {
 
-  private String id;
-  private String status;
   private String code;
   private String message;
   private Collection<?> errorList;
