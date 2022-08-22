@@ -81,8 +81,22 @@ interface UserController {
           """) })) @Body UserDTO requestBody);
 
   @Delete(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
-  @Operation(description = "Delete User")
   @Tag(name = "user")
+  @Operation(description = "Delete User")
   @ApiResponse(responseCode = "204", description = "No Content")
-  Mono<HttpResponse<Void>> deleteUser(@PathVariable String id, @Body UserDTO requestBody);
+  @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(type = "object", allOf = ErrorResponseDTO.class), examples = {
+      @ExampleObject("""
+          {
+            "code": "E003",
+            "message": "Record [anas] not found!",
+            "traceId": "220821122013X0nu6YXL"
+          }
+          """) }))
+  Mono<HttpResponse<Void>> deleteUser(@PathVariable String id, @RequestBody(content = @Content(examples = {
+      @ExampleObject("""
+          {
+            "id": "anas",
+            "version": 1
+          }
+          """) })) @Body UserDTO requestBody);
 }
