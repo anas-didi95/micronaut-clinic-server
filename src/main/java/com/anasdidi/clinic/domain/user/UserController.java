@@ -51,10 +51,34 @@ interface UserController {
           """) })) @Body UserDTO requestBody);
 
   @Put(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
-  @Operation(description = "Update User")
   @Tag(name = "user")
-  @ApiResponse(responseCode = "200", description = "Ok")
-  Mono<HttpResponse<UserDTO>> updateUser(@PathVariable String id, @Body UserDTO requestBody);
+  @Operation(description = "Update User")
+  @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(type = "object", allOf = UserDTO.class), examples = {
+      @ExampleObject("""
+          {
+            "id": "anas",
+            "updatedBy": "SYSTEM",
+            "updatedDate": 1661084378.897929437,
+            "version": 1,
+            "fullName": "Anas Juwaidi Mohd Jeffry"
+          }
+          """) }))
+  @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(type = "object", allOf = ErrorResponseDTO.class), examples = {
+      @ExampleObject("""
+          {
+            "code": "E003",
+            "message": "Record [anas] not found!",
+            "traceId": "220821122013X0nu6YXL"
+          }
+          """) }))
+  Mono<HttpResponse<UserDTO>> updateUser(@PathVariable String id, @RequestBody(content = @Content(examples = {
+      @ExampleObject("""
+          {
+            "id": "anas",
+            "fullName": "Anas Juwaidi Mohd Jeffry",
+            "version": 0
+          }
+          """) })) @Body UserDTO requestBody);
 
   @Delete(value = "/{id}", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
   @Operation(description = "Delete User")
