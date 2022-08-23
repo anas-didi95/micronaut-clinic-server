@@ -48,3 +48,8 @@ endpoints:
   liquibase:
     enabled: false
     sensitive: false
+
+graphql:
+  enabled: true
+  graphiql:
+    enabled: true
