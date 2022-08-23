@@ -18,7 +18,8 @@
         "vscjava.vscode-java-pack",
         "redhat.vscode-xml",
         "chris-rimmer.liquibase-snippets",
-        "humao.rest-client"
+        "humao.rest-client",
+        "GraphQL.vscode-graphql-syntax"
       ]
     }
   },
