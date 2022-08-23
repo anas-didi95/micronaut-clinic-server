@@ -9,6 +9,7 @@ features:
     app-name,
     data,
     data-r2dbc,
+    graphql,
     http-client,
     jackson-databind,
     java,

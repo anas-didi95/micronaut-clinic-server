@@ -9,17 +9,17 @@
   <parent>
     <groupId>io.micronaut</groupId>
     <artifactId>micronaut-parent</artifactId>
-    <version>3.6.0</version>
+    <version>3.6.1</version>
   </parent>
 
   <properties>
     <packaging>jar</packaging>
     <jdk.version>17</jdk.version>
     <release.version>17</release.version>
-    <micronaut.version>3.6.0</micronaut.version>
+    <micronaut.version>3.6.1</micronaut.version>
+    <micronaut.runtime>netty</micronaut.runtime>
     <micronaut.data.version>3.7.2</micronaut.data.version>
     <micronaut.test.resources.enabled>false</micronaut.test.resources.enabled>
-    <micronaut.runtime>netty</micronaut.runtime>
     <exec.mainClass>com.anasdidi.clinic.Application</exec.mainClass>
     <liquibase.version>4.14.0</liquibase.version>
   </properties>
@@ -80,6 +80,11 @@
     <dependency>
       <groupId>io.micronaut.data</groupId>
       <artifactId>micronaut-data-r2dbc</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut.graphql</groupId>
+      <artifactId>micronaut-graphql</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
