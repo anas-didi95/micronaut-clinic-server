@@ -3,6 +3,8 @@ package com.anasdidi.clinic.config;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.anasdidi.clinic.domain.user.UserDataFetcher;
+
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
@@ -17,7 +19,7 @@ import jakarta.inject.Singleton;
 public class GraphQLFactory {
 
   @Singleton
-  public GraphQL graphQL(ResourceResolver resourceResolver) {
+  public GraphQL graphQL(ResourceResolver resourceResolver, UserDataFetcher userDataFetcher) {
     SchemaParser schemaParser = new SchemaParser();
     SchemaGenerator schemaGenerator = new SchemaGenerator();
 
@@ -27,9 +29,7 @@ public class GraphQLFactory {
 
     RuntimeWiring runtimeWiring = RuntimeWiring.newRuntimeWiring()
         .type("Query", typeWiring -> typeWiring
-            .dataFetcher("hello", (env) -> {
-              return "Hello world";
-            }))
+            .dataFetcher("userList", userDataFetcher.userList()))
         .build();
 
     GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
