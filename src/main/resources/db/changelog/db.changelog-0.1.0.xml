@@ -20,4 +20,11 @@
       <column name="version" type="int" />
     </createTable>
   </changeSet>
+
+  <changeSet id="0.1.0-A" author="anas" context="dev">
+    <loadData encoding="UTF-8" file="classpath:/db/csv/0.1.0-A.t_user.csv" schemaName="public" tableName="t_user" />
+    <rollback>
+      <delete schemaName="public" tableName="t_user" />
+    </rollback>
+  </changeSet>
 </databaseChangeLog>

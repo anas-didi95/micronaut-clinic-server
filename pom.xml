@@ -213,6 +213,7 @@
           <password>${env.DB_PASSWORD}</password>
           <rollbackTag>${project.version}</rollbackTag>
           <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+          <contexts>${env.MICRONAUT_ENVIRONMENTS}</contexts>
         </configuration>
       </plugin>
     </plugins>

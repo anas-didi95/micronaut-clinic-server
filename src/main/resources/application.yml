@@ -41,8 +41,9 @@ r2dbc:
 liquibase:
   datasources:
     default:
-      enabled: false
+      enabled: true
       change-log: classpath:/db/changelog/db.changelog-main.xml
+      contexts: ${MICRONAUT_ENVIRONMENTS}
 
 endpoints:
   liquibase:
