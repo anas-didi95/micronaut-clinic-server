@@ -21,19 +21,24 @@ public class GraphQLFactory {
   @Singleton
   public GraphQL graphQL(ResourceResolver resourceResolver, UserDataFetcher userDataFetcher) {
     SchemaParser schemaParser = new SchemaParser();
-    SchemaGenerator schemaGenerator = new SchemaGenerator();
-
     TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
-    typeRegistry.merge(schemaParser.parse(new BufferedReader(new InputStreamReader(
-        resourceResolver.getResourceAsStream("classpath:schema.graphqls").get()))));
+    typeRegistry
+        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/schema.graphqls"))
+        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/user.graphqls"));
 
     RuntimeWiring runtimeWiring = RuntimeWiring.newRuntimeWiring()
         .type("Query", typeWiring -> typeWiring
-            .dataFetcher("userList", userDataFetcher.userList()))
+            .dataFetcher("userList", userDataFetcher.getUserList()))
         .build();
 
+    SchemaGenerator schemaGenerator = new SchemaGenerator();
     GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
-
     return GraphQL.newGraphQL(graphQLSchema).build();
+  }
+
+  private TypeDefinitionRegistry getTypeDefinitionRegistry(ResourceResolver resourceResolver, SchemaParser schemaParser,
+      String path) {
+    return schemaParser
+        .parse(new BufferedReader(new InputStreamReader(resourceResolver.getResourceAsStream(path).get())));
   }
 }

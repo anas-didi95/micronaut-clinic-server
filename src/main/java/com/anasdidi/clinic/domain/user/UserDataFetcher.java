@@ -21,7 +21,7 @@ public class UserDataFetcher {
     this.userRepository = userRepository;
   }
 
-  public DataFetcher<CompletableFuture<List<UserDTO>>> userList() {
+  public DataFetcher<CompletableFuture<List<UserDTO>>> getUserList() {
     return (env) -> {
       logger.debug("[{}:userList] START", env.getExecutionId());
       return userRepository.findAll().map(UserUtils::copy).collectList().toFuture()
