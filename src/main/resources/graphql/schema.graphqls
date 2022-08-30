@@ -5,5 +5,4 @@ type Pagination {
 }
 
 type Query {
-  pagination: Pagination
 }
