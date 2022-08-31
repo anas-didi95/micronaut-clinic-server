@@ -32,7 +32,8 @@ public class GraphQLFactory {
 
     RuntimeWiring runtimeWiring = RuntimeWiring.newRuntimeWiring()
         .type("Query", typeWiring -> typeWiring
-            .dataFetcher("userSearch", userDataFetcher.getUserSearch()))
+            .dataFetcher("userSearch", userDataFetcher.getUserSearch())
+            .dataFetcher("user", userDataFetcher.getUser()))
         .build();
 
     SchemaGenerator schemaGenerator = new SchemaGenerator();

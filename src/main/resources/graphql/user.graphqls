@@ -4,8 +4,8 @@ type User {
   isDeleted: Boolean!
   createdDate(format: String): String!
   createdBy: String!
-  updatedDate(format: String): String!
-  updatedBy: String!
+  updatedDate(format: String): String
+  updatedBy: String
   version: Int!
 }
 
@@ -16,4 +16,5 @@ type UserSearch {
 
 extend type Query {
   userSearch(page: Int! = 1, size: Int! = 10): UserSearch!
+  user(id: String!): User!
 }

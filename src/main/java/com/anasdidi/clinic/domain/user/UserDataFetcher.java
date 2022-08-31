@@ -37,6 +37,13 @@ public class UserDataFetcher {
     };
   }
 
+  public DataFetcher<CompletableFuture<UserDTO>> getUser() {
+    return (env) -> {
+      String id = env.getArgument("id");
+      return userRepository.findById(id).map(UserUtils::copy).toFuture();
+    };
+  }
+
   private int getSearchPage(DataFetchingEnvironment env) {
     int page = env.getArgument("page");
     return Math.max(page, 1);
