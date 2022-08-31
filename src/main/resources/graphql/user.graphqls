@@ -1,6 +1,12 @@
 type User {
   id: String!
   fullName: String!
+  isDeleted: Boolean!
+  createdDate(format: String): String!
+  createdBy: String!
+  updatedDate(format: String): String!
+  updatedBy: String!
+  version: Int!
 }
 
 type UserSearch {
