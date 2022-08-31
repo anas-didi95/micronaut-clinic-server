@@ -1,13 +1,13 @@
 type User {
-  id: String
-  fullName: String
+  id: String!
+  fullName: String!
 }
 
 type UserSearch {
-  resultList: [User]
-  pagination: Pagination
+  resultList: [User]!
+  pagination: Pagination!
 }
 
 extend type Query {
-  userSearch: UserSearch
+  userSearch(page: Int! = 1, size: Int! = 10): UserSearch!
 }

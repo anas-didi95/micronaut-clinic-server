@@ -32,7 +32,7 @@ public class SearchDTO<T> {
     @SuppressWarnings("rawtypes")
     public PaginationDTO(Page page) {
       this.totalPages = page.getTotalPages();
-      this.pageNumber = page.getPageNumber();
+      this.pageNumber = page.getPageNumber() + 1;
       this.size = page.getSize();
     }
   }
