@@ -44,7 +44,7 @@ class UserServiceBean implements UserService {
   public Mono<UserDTO> updataUser(String id, UserDAO dao, String traceId) {
     logger.debug("[{}:updateUser] id={}, dao={}", traceId, id, dao);
 
-    Mono<Void> check = userRepository.findById(id)
+    Mono<UserDAO> check = userRepository.findById(id)
         .switchIfEmpty(Mono.defer(() -> {
           return Mono.error(new RecordNotFoundException(traceId, id));
         }))
@@ -53,12 +53,12 @@ class UserServiceBean implements UserService {
             return Mono.error(new RecordMetadataNotMatchedException(traceId, db.getId(), db.getVersion(), dao.getId(),
                 dao.getVersion()));
           }
-          return Mono.empty();
-        });
-    Mono<UserDTO> update = userRepository.update(dao)
-        .map(UserUtils::copy);
+          return Mono.just(db);
+        })
+        .map(db -> UserUtils.merge(db, dao));
+    Mono<UserDTO> update = check.flatMap(userRepository::update).map(UserUtils::copy);
 
-    return check.then(update).doOnError(error -> logger.error("[{}:updateUser] id={}, dao={}", traceId, id, dao));
+    return update.doOnError(error -> logger.error("[{}:updateUser] id={}, dao={}", traceId, id, dao));
   }
 
   @Override

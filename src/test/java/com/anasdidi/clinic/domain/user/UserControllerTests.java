@@ -31,6 +31,19 @@ class UserControllerTests {
     return requestBody;
   }
 
+  private void assertRecord(boolean isUpdate, UserDTO dto, UserDAO dao, Long expectedVersion) {
+    Assertions.assertEquals(dto.getId(), dao.getId());
+    Assertions.assertEquals(dto.getFullName(), dao.getFullName());
+    Assertions.assertNotNull(dao.getIsDeleted());
+    Assertions.assertNotNull(dao.getCreatedDate());
+    Assertions.assertNotNull(dao.getCreatedBy());
+    Assertions.assertEquals(expectedVersion, dao.getVersion());
+    if (isUpdate) {
+      Assertions.assertNotNull(dao.getUpdatedBy());
+      Assertions.assertNotNull(dao.getUpdatedDate());
+    }
+  }
+
   @Test
   void testUserCreateSuccess(RequestSpecification spec) {
     UserDTO requestBody = getRequestBody();
@@ -47,12 +60,7 @@ class UserControllerTests {
     Assertions.assertEquals(beforeCount + 1, afterCount);
 
     UserDAO dao = Mono.from(userRepository.findById(responseBody.getId())).block();
-    Assertions.assertNotNull(dao);
-    Assertions.assertEquals(requestBody.getId(), dao.getId());
-    Assertions.assertEquals(requestBody.getFullName(), dao.getFullName());
-    Assertions.assertNotNull(dao.getCreatedDate());
-    Assertions.assertNotNull(dao.getCreatedBy());
-    Assertions.assertEquals(0, dao.getVersion());
+    assertRecord(false, requestBody, dao, 0L);
   }
 
   @Test
@@ -99,11 +107,7 @@ class UserControllerTests {
         .extract().response().as(UserDTO.class);
 
     UserDAO result = userRepository.findById(responseBody.getId()).block();
-    Assertions.assertNotNull(result);
-    Assertions.assertEquals(requestBody.getFullName(), result.getFullName());
-    Assertions.assertNotNull(result.getUpdatedBy());
-    Assertions.assertNotNull(result.getUpdatedDate());
-    Assertions.assertEquals(domain.getVersion() + 1, result.getVersion());
+    assertRecord(true, requestBody, result, requestBody.getVersion() + 1);
   }
 
   @Test

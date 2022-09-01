@@ -17,4 +17,10 @@ final class UserUtils {
         .build();
     return (UserDTO) CommonUtils.copy(in, out);
   }
+
+  static UserDAO merge(UserDAO db, UserDAO req) {
+    String fullName = req.getFullName();
+    UserDAO result = new UserDAO(fullName);
+    return (UserDAO) CommonUtils.copy(db, result);
+  }
 }
