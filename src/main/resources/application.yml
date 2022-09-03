@@ -19,6 +19,15 @@ micronaut:
       rapidoc:
         paths: classpath:META-INF/swagger/views/rapidoc
         mapping: /rapidoc/**
+  security:
+    authentication: bearer
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: ${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}
+
 netty:
   default:
     allocator:
@@ -37,6 +46,7 @@ r2dbc:
       url: r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
       username: ${DB_USERNAME}
       password: ${DB_PASSWORD}
+      schema-generate: NONE
 
 liquibase:
   datasources:

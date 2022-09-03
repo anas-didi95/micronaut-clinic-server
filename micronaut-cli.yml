@@ -29,6 +29,8 @@ features:
     reactor,
     reactor-http-client,
     readme,
+    security-annotations,
+    security-jwt,
     shade,
     test-resources,
     yaml,
