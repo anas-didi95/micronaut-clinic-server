@@ -1,0 +1,8 @@
+type Pagination {
+  totalPages: Int!
+  pageNumber: Int!
+  size: Int!
+}
+
+type Query {
+}
