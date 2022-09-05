@@ -1,3 +1,15 @@
+micronaut:
+  security:
+    intercept-url-map:
+      - pattern: /clinic/graphql**
+        httpMethod: POST
+        access:
+          - isAnonymous()
+      - pattern: /clinic/graphiql**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+
 liquibase:
   datasources:
     default:
