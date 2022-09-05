@@ -1,0 +1,12 @@
+@baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic/graphql
+
+// @name userSearch
+POST {{baseUrl}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "query": "query A {\n  userSearch {\n    resultList {\n      id\n    }\n    pagination {\n      totalPages\n    }\n  }\n}\n",
+    "variables": null,
+    "operationName": "A"
+}
