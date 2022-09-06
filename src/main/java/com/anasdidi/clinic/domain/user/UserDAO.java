@@ -18,9 +18,12 @@ import lombok.ToString;
 @Builder
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "password")
 @MappedEntity(value = "t_user")
 class UserDAO extends BaseDAO {
+
+  @MappedProperty(value = "password")
+  private String password;
 
   @MappedProperty(value = "full_name")
   @NotBlank

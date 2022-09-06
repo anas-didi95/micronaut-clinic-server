@@ -10,6 +10,7 @@ Authorization: Bearer {{accessToken}}
 
 {
   "id": "anas",
+  "password": "password",
   "fullName": "Anas Juwaidi"
 }
 

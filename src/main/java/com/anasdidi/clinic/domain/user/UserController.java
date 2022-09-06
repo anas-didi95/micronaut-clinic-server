@@ -30,6 +30,7 @@ interface UserController {
       @ExampleObject("""
           {
              "id": "anas",
+             "password": "password",
              "createdDate": 1661084378.897929437,
              "createdBy": "SYSTEM",
              "updatedDate": 1661084378.897929437,
