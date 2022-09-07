@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
 @Factory
-public class AuthConfig {
+public class AuthFactory {
 
   @Singleton
   public AuthenticationProvider authenticationProvider() {
@@ -16,7 +16,8 @@ public class AuthConfig {
       return Flux.create(emitter -> {
         if (authenticationRequest.getIdentity().equals("sherlock") &&
             authenticationRequest.getSecret().equals("password")) {
-          emitter.next(AuthenticationResponse.success((String) authenticationRequest.getIdentity()));
+          emitter.next(AuthenticationResponse
+              .success((String) authenticationRequest.getIdentity()));
           emitter.complete();
         } else {
           emitter.error(AuthenticationResponse.exception());
