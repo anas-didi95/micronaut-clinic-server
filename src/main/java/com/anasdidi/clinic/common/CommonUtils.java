@@ -4,7 +4,11 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public final class CommonUtils {
+
+  private static BCryptPasswordEncoder passwordEncoder;
 
   public static IRecordMetadata copy(IRecordMetadata in, IRecordMetadata out) {
     out.setId(in.getId());
@@ -20,5 +24,12 @@ public final class CommonUtils {
   public static String getFormattedInstant(Instant instant, String format) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format).withZone(ZoneId.systemDefault());
     return formatter.format(instant);
+  }
+
+  public static BCryptPasswordEncoder getPasswordEncoder() {
+    if (passwordEncoder == null) {
+      passwordEncoder = new BCryptPasswordEncoder(14);
+    }
+    return passwordEncoder;
   }
 }
