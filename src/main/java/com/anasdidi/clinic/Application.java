@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.info.License;
     contact = @Contact(url = "https://anasdidi.dev", name = "Anas Juwaidi", email = "anas.didi95@gmail.com")))
 public class Application {
 
+  static {
+    System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+  }
+
   public static void main(String[] args) {
     Micronaut.run(Application.class, args);
   }

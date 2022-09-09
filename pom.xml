@@ -22,7 +22,8 @@
     <micronaut.test.resources.enabled>false</micronaut.test.resources.enabled>
     <exec.mainClass>com.anasdidi.clinic.Application</exec.mainClass>
     <liquibase.version>4.14.0</liquibase.version>
-    <crypto.version>5.7.3</crypto.version>
+    <spring-security-crypto.version>5.7.3</spring-security-crypto.version>
+    <commons-logging.version>1.2</commons-logging.version>
   </properties>
 
   <repositories>
@@ -157,7 +158,12 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-crypto</artifactId>
-      <version>${crypto.version}</version>
+      <version>${spring-security-crypto.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
     </dependency>
   </dependencies>
 
