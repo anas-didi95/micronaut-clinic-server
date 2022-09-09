@@ -1,6 +1,7 @@
 package com.anasdidi.clinic.domain.user;
 
 import com.anasdidi.clinic.common.BaseController;
+import com.anasdidi.clinic.common.CommonUtils;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -22,7 +23,7 @@ class UserControllerV1 extends BaseController implements UserController {
 
   @Override
   public Mono<HttpResponse<UserDTO>> createUser(UserDTO requestBody) {
-    String traceId = generateTraceId();
+    String traceId = CommonUtils.generateTraceId();
 
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))
@@ -33,7 +34,7 @@ class UserControllerV1 extends BaseController implements UserController {
 
   @Override
   public Mono<HttpResponse<UserDTO>> updateUser(String id, UserDTO requestBody) {
-    String traceId = generateTraceId();
+    String traceId = CommonUtils.generateTraceId();
 
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))
@@ -44,7 +45,7 @@ class UserControllerV1 extends BaseController implements UserController {
 
   @Override
   public Mono<HttpResponse<Void>> deleteUser(String id, UserDTO requestBody) {
-    String traceId = generateTraceId();
+    String traceId = CommonUtils.generateTraceId();
 
     return Mono.just(requestBody)
         .map(dto -> UserUtils.copy(dto))

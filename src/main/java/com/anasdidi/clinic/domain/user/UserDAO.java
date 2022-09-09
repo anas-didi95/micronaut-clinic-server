@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 import com.anasdidi.clinic.common.BaseDAO;
 
+import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,10 @@ import lombok.ToString;
 @ToString(callSuper = true, exclude = "password")
 @MappedEntity(value = "t_user")
 class UserDAO extends BaseDAO {
+
+  @Id
+  @MappedProperty(value = "id")
+  private String id;
 
   @MappedProperty(value = "password")
   private String password;

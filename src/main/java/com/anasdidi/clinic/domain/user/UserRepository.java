@@ -13,4 +13,6 @@ interface UserRepository extends ReactorPageableRepository<UserDAO, String> {
   Mono<Boolean> existsById(String id);
 
   Mono<Page<UserDAO>> findAll(Pageable pageable);
+
+  Mono<UserDAO> findById(String id);
 }

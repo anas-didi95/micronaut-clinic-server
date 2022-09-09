@@ -9,4 +9,6 @@ public interface UserService {
   Mono<UserDTO> updataUser(String id, UserDAO dao, String traceId);
 
   Mono<Long> deleteUser(String id, UserDAO dao, String traceId);
+
+  Mono<UserDTO> getUserById(String id, String traceId);
 }

@@ -2,12 +2,9 @@ package com.anasdidi.clinic.common;
 
 import java.time.Instant;
 
-import javax.validation.constraints.NotBlank;
-
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.data.annotation.DateUpdated;
-import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.annotation.Version;
 import lombok.Getter;
@@ -19,11 +16,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public abstract class BaseDAO implements IRecordMetadata {
-
-  @Id
-  @MappedProperty(value = "id")
-  @NotBlank
-  private String id;
 
   @MappedProperty(value = "is_del")
   private Boolean isDeleted;

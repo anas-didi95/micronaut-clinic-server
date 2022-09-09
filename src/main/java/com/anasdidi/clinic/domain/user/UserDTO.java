@@ -17,6 +17,7 @@ import lombok.ToString;
 @ToString(callSuper = true, exclude = "password")
 public class UserDTO extends BaseDTO {
 
+  private String id;
   private String password;
   private String fullName;
 }

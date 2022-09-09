@@ -41,7 +41,7 @@ class UserControllerTests {
 
   public String getAccessToken() {
     if (accessToken == null) {
-      UsernamePasswordCredentials creds = new UsernamePasswordCredentials("sherlock", "password");
+      UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin1", "p@ssw0rd");
       BearerAccessRefreshToken loginRsp = appClient.login(creds);
       accessToken = loginRsp.getAccessToken();
     }

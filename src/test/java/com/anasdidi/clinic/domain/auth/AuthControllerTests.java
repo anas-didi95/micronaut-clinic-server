@@ -42,13 +42,13 @@ public class AuthControllerTests {
 
   @Test
   void uponSuccessfulAuthenticationAJsonWebTokenIsIssuedToTheUser() throws ParseException {
-    UsernamePasswordCredentials creds = new UsernamePasswordCredentials("sherlock", "password");
+    UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin1", "p@ssw0rd");
     HttpRequest<?> request = HttpRequest.POST("/clinic/login", creds);
     HttpResponse<BearerAccessRefreshToken> rsp = client.toBlocking().exchange(request, BearerAccessRefreshToken.class);
     assertEquals(HttpStatus.OK, rsp.getStatus());
 
     BearerAccessRefreshToken bearerAccessRefreshToken = rsp.body();
-    assertEquals("sherlock", bearerAccessRefreshToken.getUsername());
+    assertEquals("admin1", bearerAccessRefreshToken.getUsername());
     assertNotNull(bearerAccessRefreshToken.getAccessToken());
     assertTrue(JWTParser.parse(bearerAccessRefreshToken.getAccessToken()) instanceof SignedJWT);
 
@@ -59,6 +59,6 @@ public class AuthControllerTests {
     HttpResponse<String> response = client.toBlocking().exchange(requestWithAuthorization, String.class);
 
     assertEquals(HttpStatus.OK, rsp.getStatus());
-    assertEquals("sherlock", response.body());
+    assertEquals("admin1", response.body());
   }
 }

@@ -3,6 +3,7 @@ package com.anasdidi.clinic.domain.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.anasdidi.clinic.common.CommonUtils;
 import com.anasdidi.clinic.exception.RecordAlreadyExistsException;
 import com.anasdidi.clinic.exception.RecordMetadataNotMatchedException;
 import com.anasdidi.clinic.exception.RecordNotFoundException;
@@ -24,7 +25,7 @@ class UserServiceBean implements UserService {
 
   @Override
   public Mono<UserDTO> createUser(UserDAO dao, String traceId) {
-    dao.setIsDeleted(false);
+    dao.setPassword(CommonUtils.getPasswordEncoder().encode(dao.getPassword()));
 
     logger.debug("[{}:createUser] dao={}", traceId, dao);
 
@@ -77,5 +78,14 @@ class UserServiceBean implements UserService {
     Mono<Long> delete = userRepository.deleteById(id);
 
     return check.then(delete).doOnError(error -> logger.error("[{}:deleteUser] id={}, dao={}", traceId, id, dao));
+  }
+
+  @Override
+  public Mono<UserDTO> getUserById(String id, String traceId) {
+    logger.debug("[{}:getUserById] id={} ", traceId, id);
+    return userRepository.findById(id)
+        .switchIfEmpty(Mono.error(new RecordNotFoundException(traceId, id)))
+        .map(UserUtils::copy)
+        .doOnError((error) -> logger.error("[{}:getUserById] id={} ", traceId, id));
   }
 }
