@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.anasdidi.clinic.client.AppClient;
+import com.anasdidi.clinic.common.TestUtils;
 
 import io.micronaut.http.HttpStatus;
-import io.micronaut.security.authentication.UsernamePasswordCredentials;
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -21,7 +20,6 @@ class UserControllerTests {
   private static final String baseURI = "/clinic/v1/user";
   private final UserRepository userRepository;
   private final AppClient appClient;
-  private String accessToken;
 
   @Inject
   UserControllerTests(UserRepository userRepository, AppClient appClient) {
@@ -40,12 +38,7 @@ class UserControllerTests {
   }
 
   public String getAccessToken() {
-    if (accessToken == null) {
-      UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin1", "p@ssw0rd");
-      BearerAccessRefreshToken loginRsp = appClient.login(creds);
-      accessToken = loginRsp.getAccessToken();
-    }
-    return accessToken;
+    return TestUtils.getAccessToken(appClient);
   }
 
   private void assertRecord(boolean isUpdate, UserDTO dto, UserDAO dao, Long expectedVersion) {
