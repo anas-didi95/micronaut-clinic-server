@@ -1,11 +1,20 @@
-@baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic/login
+@baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic
+@accessToken = {{login.response.body.$.access_token}}
 
 # @name login
-POST {{baseUrl}}
+POST {{baseUrl}}/login
 Accept: application/json
 Content-Type: application/json
 
 {
   "username": "admin1",
-  "password": "p@ssw0rd1"
+  "password": "p@ssw0rd"
 }
+
+###
+
+# @name getAuthenticatedUsername
+GET {{baseUrl}}
+Accept: text/plain
+Content-Type: text/plain
+Authorization: Bearer {{accessToken}}

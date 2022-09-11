@@ -14,8 +14,8 @@ import io.micronaut.security.rules.SecurityRule;
 public class AuthController {
 
   @Produces(MediaType.TEXT_PLAIN)
-  @Get
-  public String index(Principal principal) {
+  @Get("/auth/username")
+  public String getAuthenticatedUsername(Principal principal) {
     return principal.getName();
   }
 }

@@ -53,7 +53,7 @@ public class AuthControllerTests {
     assertTrue(JWTParser.parse(bearerAccessRefreshToken.getAccessToken()) instanceof SignedJWT);
 
     String accessToken = bearerAccessRefreshToken.getAccessToken();
-    HttpRequest<?> requestWithAuthorization = HttpRequest.GET("/clinic/")
+    HttpRequest<?> requestWithAuthorization = HttpRequest.GET("/clinic/auth/username")
         .accept(MediaType.TEXT_PLAIN)
         .bearerAuth(accessToken);
     HttpResponse<String> response = client.toBlocking().exchange(requestWithAuthorization, String.class);
