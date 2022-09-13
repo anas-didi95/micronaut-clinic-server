@@ -14,13 +14,13 @@ Content-Type: application/json
 
 ###
 
-# @name refreshToken
+# @name oauth/access_token
 POST {{baseUrl}}/oauth/access_token
 Accept: application/json
 Content-Type: application/json
 
 {
-  "refresh_token": "eyJhbGciOiJIUzI1NiJ9.MDUxNTZhNDItNTcyYy00ODI5LThhOTAtYzM0ZTA3NTc4MzU0.sSHSBKViHosU79kZDV0bxTpRLvP1Gaqi5V7Vs4lLoFU",
+  "refresh_token": "{{refreshToken}}",
   "grant_type": "refresh_token"
 }
 
