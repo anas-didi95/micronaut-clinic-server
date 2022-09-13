@@ -61,4 +61,17 @@ public class AuthControllerTests {
     assertEquals(HttpStatus.OK, rsp.getStatus());
     assertEquals("admin1", response.body());
   }
+
+  @Test
+  void uponSuccessfulAuthenticationUserGetsAccessTokenAndRefreshToken() throws ParseException {
+    UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin1", "p@ssw0rd");
+    HttpRequest<?> request = HttpRequest.POST("/clinic/login", creds);
+    BearerAccessRefreshToken rsp = client.toBlocking().retrieve(request, BearerAccessRefreshToken.class);
+
+    assertEquals("admin1", rsp.getUsername());
+    assertNotNull(rsp.getAccessToken());
+    assertNotNull(rsp.getRefreshToken());
+
+    assertTrue(JWTParser.parse(rsp.getAccessToken()) instanceof SignedJWT);
+  }
 }
