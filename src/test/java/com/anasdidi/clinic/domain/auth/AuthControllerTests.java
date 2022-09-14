@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import com.anasdidi.clinic.common.TestConstants;
+import com.anasdidi.clinic.common.TestConstants.User;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
 
@@ -56,13 +58,14 @@ public class AuthControllerTests {
 
   @Test
   void uponSuccessfulAuthenticationAJsonWebTokenIsIssuedToTheUser() throws ParseException {
-    UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin1", "p@ssw0rd");
+    User user = TestConstants.User.ADMIN1;
+    UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.id, user.password);
     HttpRequest<?> request = HttpRequest.POST("/clinic/login", creds);
     HttpResponse<BearerAccessRefreshToken> rsp = client.toBlocking().exchange(request, BearerAccessRefreshToken.class);
     assertEquals(HttpStatus.OK, rsp.getStatus());
 
     BearerAccessRefreshToken bearerAccessRefreshToken = rsp.body();
-    assertEquals("admin1", bearerAccessRefreshToken.getUsername());
+    assertEquals(user.id, bearerAccessRefreshToken.getUsername());
     assertNotNull(bearerAccessRefreshToken.getAccessToken());
     assertTrue(JWTParser.parse(bearerAccessRefreshToken.getAccessToken()) instanceof SignedJWT);
 
@@ -73,16 +76,17 @@ public class AuthControllerTests {
     HttpResponse<String> response = client.toBlocking().exchange(requestWithAuthorization, String.class);
 
     assertEquals(HttpStatus.OK, rsp.getStatus());
-    assertEquals("admin1", response.body());
+    assertEquals(TestConstants.User.ADMIN1.id, response.body());
   }
 
   @Test
   void uponSuccessfulAuthenticationUserGetsAccessTokenAndRefreshToken() throws ParseException {
-    UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin1", "p@ssw0rd");
+    User user = TestConstants.User.ADMIN1;
+    UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.id, user.password);
     HttpRequest<?> request = HttpRequest.POST("/clinic/login", creds);
     BearerAccessRefreshToken rsp = client.toBlocking().retrieve(request, BearerAccessRefreshToken.class);
 
-    assertEquals("admin1", rsp.getUsername());
+    assertEquals(user.id, rsp.getUsername());
     assertNotNull(rsp.getAccessToken());
     assertNotNull(rsp.getRefreshToken());
 
@@ -115,7 +119,7 @@ public class AuthControllerTests {
   @Test
   @SuppressWarnings("rawtypes")
   void accessingSecuredURLWithoutAuthenticatingReturnsUnauthorized_RefreshTokenNotFoundTest() {
-    Authentication user = Authentication.build("admin1");
+    Authentication user = Authentication.build(TestConstants.User.ADMIN1.id);
 
     String refreshToken = refreshTokenGenerator.createKey(user);
     Optional<String> refreshTokenOptional = refreshTokenGenerator.generate(user, refreshToken);
@@ -142,7 +146,7 @@ public class AuthControllerTests {
   @Test
   @SuppressWarnings("rawtypes")
   void accessingSecuredURLWithoutAuthenticatingReturnsUnauthorized_RefreshTokenRevokedTest() {
-    Authentication user = Authentication.build("admin1");
+    Authentication user = Authentication.build(TestConstants.User.ADMIN1.id);
 
     String refreshToken = refreshTokenGenerator.createKey(user);
     Optional<String> refreshTokenOptional = refreshTokenGenerator.generate(user, refreshToken);
