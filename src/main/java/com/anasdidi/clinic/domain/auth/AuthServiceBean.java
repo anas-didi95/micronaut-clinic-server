@@ -4,6 +4,9 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.anasdidi.clinic.common.CommonUtils;
+import com.anasdidi.clinic.exception.RecordNotFoundException;
+
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
 import io.micronaut.security.errors.OauthErrorResponseException;
@@ -12,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Mono;
 
 @Singleton
 public class AuthServiceBean implements AuthService {
@@ -38,16 +42,18 @@ public class AuthServiceBean implements AuthService {
   @Override
   public Publisher<Authentication> getAuthentication(String refreshToken) {
     return Flux.create(emitter -> {
-      authRepository.findByRefreshToken(refreshToken).subscribe(auth -> {
-        if (auth.getIsDeleted()) {
-          emitter.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT,
-              "refresh token revoked", null));
-        } else {
-          emitter.next(Authentication.build(auth.getUserId()));
-          emitter.complete();
-        }
-      }, error -> emitter.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT,
-          "refresh token not found", null)));
+      authRepository.findByRefreshToken(refreshToken)
+          .switchIfEmpty(Mono.error(new RecordNotFoundException(CommonUtils.generateTraceId(), refreshToken)))
+          .subscribe(auth -> {
+            if (auth.getIsDeleted()) {
+              emitter.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT,
+                  "refresh token revoked", null));
+            } else {
+              emitter.next(Authentication.build(auth.getUserId()));
+              emitter.complete();
+            }
+          }, error -> emitter.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT,
+              "refresh token not found", null)));
     }, FluxSink.OverflowStrategy.ERROR);
   }
 }

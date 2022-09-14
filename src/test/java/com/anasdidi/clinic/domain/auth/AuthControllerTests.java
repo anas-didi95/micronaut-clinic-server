@@ -22,7 +22,9 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
+import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest;
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -31,9 +33,14 @@ import jakarta.inject.Inject;
 @MicronautTest
 public class AuthControllerTests {
 
+  private final HttpClient client;
+  private final RefreshTokenGenerator refreshTokenGenerator;
+
   @Inject
-  @Client("/")
-  HttpClient client;
+  AuthControllerTests(@Client("/") HttpClient client, RefreshTokenGenerator refreshTokenGenerator) {
+    this.client = client;
+    this.refreshTokenGenerator = refreshTokenGenerator;
+  }
 
   @Test
   void accessingASecuredUrlWithoutAuthenticatingReturnsUnauthorized() {
@@ -81,7 +88,7 @@ public class AuthControllerTests {
 
   @Test
   @SuppressWarnings("rawtypes")
-  void accessingSecuredURLWithoutAuthenticatingReturnsUnauthorized() {
+  void accessingSecuredURLWithoutAuthenticatingReturnsUnauthorized_UnsignedRefreshTokenTest() {
     String unsignedRefreshedToken = "foo";
     Argument<BearerAccessRefreshToken> bodyArgument = Argument.of(BearerAccessRefreshToken.class);
     Argument<Map> errorArgument = Argument.of(Map.class);
@@ -100,5 +107,32 @@ public class AuthControllerTests {
     Map m = mapOptional.get();
     assertEquals("invalid_grant", m.get("error"));
     assertEquals("Refresh token is invalid", m.get("error_description"));
+  }
+
+  @Test
+  @SuppressWarnings("rawtypes")
+  void accessingSecuredURLWithoutAuthenticatingReturnsUnauthorized_RefreshTokenNotFoundTest() {
+    Authentication user = Authentication.build("admin1");
+
+    String refreshToken = refreshTokenGenerator.createKey(user);
+    Optional<String> refreshTokenOptional = refreshTokenGenerator.generate(user, refreshToken);
+    assertTrue(refreshTokenOptional.isPresent());
+
+    String signedRefreshToken = refreshTokenOptional.get();
+    Argument<BearerAccessRefreshToken> bodyArgument = Argument.of(BearerAccessRefreshToken.class);
+    Argument<Map> errorArgument = Argument.of(Map.class);
+    HttpRequest<?> req = HttpRequest.POST("/clinic/oauth/access_token", new TokenRefreshRequest(signedRefreshToken));
+
+    HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> {
+      client.toBlocking().exchange(req, bodyArgument, errorArgument);
+    });
+    assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+
+    Optional<Map> mapOptional = e.getResponse().getBody(Map.class);
+    assertTrue(mapOptional.isPresent());
+
+    Map m = mapOptional.get();
+    assertEquals("invalid_grant", m.get("error"));
+    assertEquals("refresh token not found", m.get("error_description"));
   }
 }
