@@ -35,11 +35,14 @@ public class AuthControllerTests {
 
   private final HttpClient client;
   private final RefreshTokenGenerator refreshTokenGenerator;
+  private final AuthRepository authRepository;
 
   @Inject
-  AuthControllerTests(@Client("/") HttpClient client, RefreshTokenGenerator refreshTokenGenerator) {
+  AuthControllerTests(@Client("/") HttpClient client, RefreshTokenGenerator refreshTokenGenerator,
+      AuthRepository authRepository) {
     this.client = client;
     this.refreshTokenGenerator = refreshTokenGenerator;
+    this.authRepository = authRepository;
   }
 
   @Test
@@ -134,5 +137,39 @@ public class AuthControllerTests {
     Map m = mapOptional.get();
     assertEquals("invalid_grant", m.get("error"));
     assertEquals("refresh token not found", m.get("error_description"));
+  }
+
+  @Test
+  @SuppressWarnings("rawtypes")
+  void accessingSecuredURLWithoutAuthenticatingReturnsUnauthorized_RefreshTokenRevokedTest() {
+    Authentication user = Authentication.build("admin1");
+
+    String refreshToken = refreshTokenGenerator.createKey(user);
+    Optional<String> refreshTokenOptional = refreshTokenGenerator.generate(user, refreshToken);
+    assertTrue(refreshTokenOptional.isPresent());
+
+    long oldTokenCount = authRepository.count().block();
+    String signedRefreshToken = refreshTokenOptional.get();
+    AuthDAO dao = AuthDAO.builder().userId(user.getName()).refreshToken(refreshToken).build();
+    dao.setIsDeleted(true);
+    dao = authRepository.save(dao).block();
+    assertEquals(oldTokenCount + 1, authRepository.count().block());
+
+    Argument<BearerAccessRefreshToken> bodyArgument = Argument.of(BearerAccessRefreshToken.class);
+    Argument<Map> errorArgument = Argument.of(Map.class);
+    HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> {
+      client.toBlocking().exchange(
+          HttpRequest.POST("/clinic/oauth/access_token", new TokenRefreshRequest(signedRefreshToken)),
+          bodyArgument,
+          errorArgument);
+    });
+    assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+
+    Optional<Map> mapOptional = e.getResponse().getBody(Map.class);
+    assertTrue(mapOptional.isPresent());
+
+    Map m = mapOptional.get();
+    assertEquals("invalid_grant", m.get("error"));
+    assertEquals("refresh token revoked", m.get("error_description"));
   }
 }
