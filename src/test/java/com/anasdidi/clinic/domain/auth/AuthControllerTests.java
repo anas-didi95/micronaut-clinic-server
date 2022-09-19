@@ -35,6 +35,9 @@ import jakarta.inject.Inject;
 @MicronautTest
 public class AuthControllerTests {
 
+  private final String baseURI = "/clinic";
+  private final String loginURI = baseURI + "/login";
+  private final String refreshTokenURI = baseURI + "/oauth/access_token";
   private final HttpClient client;
   private final RefreshTokenGenerator refreshTokenGenerator;
   private final AuthRepository authRepository;
@@ -50,7 +53,7 @@ public class AuthControllerTests {
   @Test
   void accessingASecuredUrlWithoutAuthenticatingReturnsUnauthorized() {
     HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> {
-      client.toBlocking().exchange(HttpRequest.GET("/clinic/").accept(MediaType.TEXT_PLAIN));
+      client.toBlocking().exchange(HttpRequest.GET(baseURI).accept(MediaType.TEXT_PLAIN));
     });
 
     assertEquals(HttpStatus.UNAUTHORIZED, e.getStatus());
@@ -60,7 +63,7 @@ public class AuthControllerTests {
   void uponSuccessfulAuthenticationAJsonWebTokenIsIssuedToTheUser() throws ParseException {
     User user = TestConstants.User.ADMIN1;
     UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.id, user.password);
-    HttpRequest<?> request = HttpRequest.POST("/clinic/login", creds);
+    HttpRequest<?> request = HttpRequest.POST(loginURI, creds);
     HttpResponse<BearerAccessRefreshToken> rsp = client.toBlocking().exchange(request, BearerAccessRefreshToken.class);
     assertEquals(HttpStatus.OK, rsp.getStatus());
 
@@ -70,7 +73,7 @@ public class AuthControllerTests {
     assertTrue(JWTParser.parse(bearerAccessRefreshToken.getAccessToken()) instanceof SignedJWT);
 
     String accessToken = bearerAccessRefreshToken.getAccessToken();
-    HttpRequest<?> requestWithAuthorization = HttpRequest.GET("/clinic/auth/username")
+    HttpRequest<?> requestWithAuthorization = HttpRequest.GET(baseURI + "/auth/username")
         .accept(MediaType.TEXT_PLAIN)
         .bearerAuth(accessToken);
     HttpResponse<String> response = client.toBlocking().exchange(requestWithAuthorization, String.class);
@@ -83,7 +86,7 @@ public class AuthControllerTests {
   void uponSuccessfulAuthenticationUserGetsAccessTokenAndRefreshToken() throws ParseException {
     User user = TestConstants.User.ADMIN1;
     UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.id, user.password);
-    HttpRequest<?> request = HttpRequest.POST("/clinic/login", creds);
+    HttpRequest<?> request = HttpRequest.POST(loginURI, creds);
     BearerAccessRefreshToken rsp = client.toBlocking().retrieve(request, BearerAccessRefreshToken.class);
 
     assertEquals(user.id, rsp.getUsername());
@@ -102,7 +105,7 @@ public class AuthControllerTests {
 
     HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> {
       client.toBlocking().exchange(
-          HttpRequest.POST("/clinic/oauth/access_token", new TokenRefreshRequest(unsignedRefreshedToken)),
+          HttpRequest.POST(refreshTokenURI, new TokenRefreshRequest(unsignedRefreshedToken)),
           bodyArgument,
           errorArgument);
     });
@@ -128,7 +131,7 @@ public class AuthControllerTests {
     String signedRefreshToken = refreshTokenOptional.get();
     Argument<BearerAccessRefreshToken> bodyArgument = Argument.of(BearerAccessRefreshToken.class);
     Argument<Map> errorArgument = Argument.of(Map.class);
-    HttpRequest<?> req = HttpRequest.POST("/clinic/oauth/access_token", new TokenRefreshRequest(signedRefreshToken));
+    HttpRequest<?> req = HttpRequest.POST(refreshTokenURI, new TokenRefreshRequest(signedRefreshToken));
 
     HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> {
       client.toBlocking().exchange(req, bodyArgument, errorArgument);
@@ -163,7 +166,7 @@ public class AuthControllerTests {
     Argument<Map> errorArgument = Argument.of(Map.class);
     HttpClientResponseException e = assertThrows(HttpClientResponseException.class, () -> {
       client.toBlocking().exchange(
-          HttpRequest.POST("/clinic/oauth/access_token", new TokenRefreshRequest(signedRefreshToken)),
+          HttpRequest.POST(refreshTokenURI, new TokenRefreshRequest(signedRefreshToken)),
           bodyArgument,
           errorArgument);
     });
