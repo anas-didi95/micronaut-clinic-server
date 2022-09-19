@@ -84,7 +84,6 @@ class UserServiceBean implements UserService {
   public Mono<UserDTO> getUserById(String id, String traceId) {
     logger.debug("[{}:getUserById] id={} ", traceId, id);
     return userRepository.findById(id)
-        .switchIfEmpty(Mono.error(new RecordNotFoundException(traceId, id)))
         .map(UserUtils::copy)
         .doOnError((error) -> logger.error("[{}:getUserById] id={} ", traceId, id));
   }

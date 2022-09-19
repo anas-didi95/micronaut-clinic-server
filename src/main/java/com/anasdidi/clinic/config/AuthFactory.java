@@ -10,6 +10,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Mono;
 
 @Factory
 public class AuthFactory {
@@ -20,6 +21,7 @@ public class AuthFactory {
       return Flux.create(emitter -> {
         userService
             .getUserById((String) authenticationRequest.getIdentity(), CommonUtils.generateTraceId())
+            .switchIfEmpty(Mono.error(new Exception()))
             .subscribe(user -> {
               if (CommonUtils.getPasswordEncoder()
                   .matches((String) authenticationRequest.getSecret(), user.getPassword())) {
@@ -29,7 +31,7 @@ public class AuthFactory {
               } else {
                 emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH));
               }
-            }, error -> emitter.error(error));
+            }, error -> emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.USER_NOT_FOUND)));
       }, FluxSink.OverflowStrategy.ERROR);
     };
   }
