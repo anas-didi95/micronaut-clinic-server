@@ -3,9 +3,9 @@ package com.anasdidi.clinic.config;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
 import com.anasdidi.clinic.domain.user.UserDataFetcher;
 
-import graphql.ExecutionInput;
 import graphql.GraphQL;
 import graphql.GraphQLContext;
 import graphql.schema.GraphQLSchema;
@@ -23,17 +23,20 @@ import jakarta.inject.Singleton;
 public class GraphQLFactory {
 
   @Singleton
-  public GraphQL graphQL(ResourceResolver resourceResolver, UserDataFetcher userDataFetcher) {
+  public GraphQL graphQL(ResourceResolver resourceResolver, UserDataFetcher userDataFetcher,
+      AuthDataFetcher authDataFetcher) {
     SchemaParser schemaParser = new SchemaParser();
     TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
     typeRegistry
         .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/schema.graphqls"))
-        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/user.graphqls"));
+        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/user.graphqls"))
+        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/auth.graphqls"));
 
     RuntimeWiring runtimeWiring = RuntimeWiring.newRuntimeWiring()
         .type("Query", typeWiring -> typeWiring
             .dataFetcher("userSearch", userDataFetcher.getUserSearch())
-            .dataFetcher("user", userDataFetcher.getUser()))
+            .dataFetcher("user", userDataFetcher.getUser())
+            .dataFetcher("authSearch", authDataFetcher.getAuthSearch()))
         .build();
 
     SchemaGenerator schemaGenerator = new SchemaGenerator();
@@ -44,12 +47,9 @@ public class GraphQLFactory {
   @Singleton
   public GraphQLExecutionInputCustomizer graphQLExecutionInputCustomizer() {
     return (executionInput, httpRequest, httpResponse) -> {
-      ExecutionInput.Builder executionInputBuilder = ExecutionInput.newExecutionInput()
-          .query(executionInput.getQuery())
-          .operationName(executionInput.getOperationName())
-          .variables(executionInput.getVariables())
-          .context(GraphQLContext.newContext().build());
-      return Publishers.just(executionInputBuilder.build());
+      return Publishers
+          .just(executionInput.transform((builder) -> builder
+              .context(GraphQLContext.newContext().build())));
     };
   }
 

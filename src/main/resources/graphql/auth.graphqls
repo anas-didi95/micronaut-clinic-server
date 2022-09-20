@@ -1,0 +1,20 @@
+type Auth {
+  id: ID!
+  userId: String!
+  isDeleted: Boolean!
+  createdDate(format: String): String!
+  createdBy: String!
+  updatedDate(format: String): String
+  updatedBy: String
+  version: Int!
+}
+
+type AuthSearch {
+  resultList: [Auth]!
+  pagination: Pagination!
+}
+
+extend type Query {
+  authSearch(page: Int! = 1, size: Int! = 10): AuthSearch!
+  auth(id: String!): Auth!
+}
