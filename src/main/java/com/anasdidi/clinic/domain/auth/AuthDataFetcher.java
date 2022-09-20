@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import com.anasdidi.clinic.common.BaseDataFetcher;
 import com.anasdidi.clinic.common.SearchDTO;
 
 import graphql.schema.DataFetcher;
-import graphql.schema.DataFetchingEnvironment;
 import io.micronaut.data.model.Pageable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class AuthDataFetcher {
+public class AuthDataFetcher extends BaseDataFetcher {
 
   private final AuthRepository authRepository;
 
@@ -24,9 +24,7 @@ public class AuthDataFetcher {
 
   public DataFetcher<CompletableFuture<SearchDTO<AuthDTO>>> getAuthSearch() {
     return (env) -> {
-      int page = getSearchPage(env);
-      int size = getSearchSize(env);
-      Pageable pageable = Pageable.from(page - 1, size);
+      Pageable pageable = getPageable(env);
       return authRepository.findAll(pageable).map(result -> {
         List<AuthDTO> resultList = result.getContent().stream().map(AuthUtils::copy).collect(Collectors.toList());
         return SearchDTO.<AuthDTO>builder()
@@ -35,15 +33,5 @@ public class AuthDataFetcher {
             .build();
       }).toFuture();
     };
-  }
-
-  private int getSearchPage(DataFetchingEnvironment env) {
-    int page = env.getArgument("page");
-    return Math.max(page, 1);
-  }
-
-  private int getSearchSize(DataFetchingEnvironment env) {
-    int size = env.getArgument("size");
-    return Math.max(size, 1);
   }
 }

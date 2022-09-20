@@ -1,4 +1,4 @@
-type User {
+type User implements RecordMetadata {
   id: String!
   fullName: String!
   isDeleted: Boolean!

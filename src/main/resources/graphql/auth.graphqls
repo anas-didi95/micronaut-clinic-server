@@ -1,4 +1,4 @@
-type Auth {
+type Auth implements RecordMetadata {
   id: ID!
   userId: String!
   isDeleted: Boolean!
@@ -16,5 +16,4 @@ type AuthSearch {
 
 extend type Query {
   authSearch(page: Int! = 1, size: Int! = 10): AuthSearch!
-  auth(id: String!): Auth!
 }

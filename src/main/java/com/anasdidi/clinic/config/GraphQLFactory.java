@@ -3,12 +3,17 @@ package com.anasdidi.clinic.config;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.anasdidi.clinic.domain.auth.AuthDTO;
 import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
+import com.anasdidi.clinic.domain.user.UserDTO;
 import com.anasdidi.clinic.domain.user.UserDataFetcher;
 
 import graphql.GraphQL;
 import graphql.GraphQLContext;
+import graphql.TypeResolutionEnvironment;
+import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.TypeResolver;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -37,6 +42,18 @@ public class GraphQLFactory {
             .dataFetcher("userSearch", userDataFetcher.getUserSearch())
             .dataFetcher("user", userDataFetcher.getUser())
             .dataFetcher("authSearch", authDataFetcher.getAuthSearch()))
+        .type("RecordMetadata", typeWiring -> typeWiring.typeResolver(new TypeResolver() {
+          @Override
+          public GraphQLObjectType getType(TypeResolutionEnvironment env) {
+            Object object = env.getObject();
+            if (object instanceof UserDTO) {
+              return env.getSchema().getObjectType("User");
+            } else if (object instanceof AuthDTO) {
+              return env.getSchema().getObjectType("Auth");
+            }
+            return null;
+          }
+        }))
         .build();
 
     SchemaGenerator schemaGenerator = new SchemaGenerator();
