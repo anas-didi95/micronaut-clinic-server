@@ -15,5 +15,5 @@ type AuthSearch {
 }
 
 extend type Query {
-  authSearch(page: Int! = 1, size: Int! = 10): AuthSearch!
+  authSearch(page: Int! = 1, size: Int! = 10, isDeleted: Boolean): AuthSearch!
 }

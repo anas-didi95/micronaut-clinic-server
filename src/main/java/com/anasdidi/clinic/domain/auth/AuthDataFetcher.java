@@ -8,9 +8,11 @@ import com.anasdidi.clinic.common.BaseDataFetcher;
 import com.anasdidi.clinic.common.SearchDTO;
 
 import graphql.schema.DataFetcher;
+import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
 
 @Singleton
 public class AuthDataFetcher extends BaseDataFetcher {
@@ -25,7 +27,12 @@ public class AuthDataFetcher extends BaseDataFetcher {
   public DataFetcher<CompletableFuture<SearchDTO<AuthDTO>>> getAuthSearch() {
     return (env) -> {
       Pageable pageable = getPageable(env);
-      return authRepository.findAll(pageable).map(result -> {
+      Boolean isDeleted = env.getArgument("isDeleted");
+      Mono<Page<AuthDAO>> search = isDeleted != null
+          ? authRepository.findAllByIsDeleted(isDeleted, pageable)
+          : authRepository.findAll(pageable);
+
+      return search.map(result -> {
         List<AuthDTO> resultList = result.getContent().stream().map(AuthUtils::copy).collect(Collectors.toList());
         return SearchDTO.<AuthDTO>builder()
             .resultList(resultList)
