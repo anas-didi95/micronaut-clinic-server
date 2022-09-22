@@ -3,12 +3,16 @@ package com.anasdidi.clinic.config;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import com.anasdidi.clinic.common.CommonUtils;
+import org.dataloader.DataLoader;
+import org.dataloader.DataLoaderRegistry;
+
 import com.anasdidi.clinic.common.CommonConstants.GQLContext;
+import com.anasdidi.clinic.common.CommonUtils;
 import com.anasdidi.clinic.domain.auth.AuthDTO;
 import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
 import com.anasdidi.clinic.domain.user.UserDTO;
 import com.anasdidi.clinic.domain.user.UserDataFetcher;
+import com.anasdidi.clinic.domain.user.UserService;
 
 import graphql.GraphQL;
 import graphql.GraphQLContext;
@@ -73,6 +77,16 @@ public class GraphQLFactory {
                   .of(GQLContext.TRACE_ID.key, CommonUtils.generateTraceId())
                   .build())));
     };
+  }
+
+  @Singleton
+  public DataLoaderRegistry dataLoaderRegistry(UserService userService) {
+    DataLoaderRegistry registry = new DataLoaderRegistry();
+    registry.register("user", DataLoader.<String, UserDTO>newMappedDataLoader((keys, env) -> {
+      return userService.getUsersByIdIn(keys, CommonUtils.generateTraceId()).collectMap(o -> o.getId(), o -> o)
+          .toFuture();
+    }));
+    return registry;
   }
 
   private TypeDefinitionRegistry getTypeDefinitionRegistry(ResourceResolver resourceResolver, SchemaParser schemaParser,

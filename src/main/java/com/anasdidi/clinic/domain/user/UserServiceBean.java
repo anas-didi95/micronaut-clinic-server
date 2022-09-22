@@ -1,5 +1,7 @@
 package com.anasdidi.clinic.domain.user;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +12,7 @@ import com.anasdidi.clinic.exception.RecordNotFoundException;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Singleton
@@ -86,5 +89,13 @@ class UserServiceBean implements UserService {
     return userRepository.findById(id)
         .map(UserUtils::copy)
         .doOnError((error) -> logger.error("[{}:getUserById] id={} ", traceId, id));
+  }
+
+  @Override
+  public Flux<UserDTO> getUsersByIdIn(Collection<String> ids, String traceId) {
+    logger.debug("[{}:getUsersByIdIn] ids.size={}", traceId, ids.size());
+    return userRepository.findByIdIn(ids)
+        .map(UserUtils::copy)
+        .doOnError((error) -> logger.error("[{}:getUsersByIdIn] ids.size={}", traceId, ids.size()));
   }
 }
