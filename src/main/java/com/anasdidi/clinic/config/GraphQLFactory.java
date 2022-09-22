@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import com.anasdidi.clinic.common.CommonUtils;
+import com.anasdidi.clinic.common.CommonConstants.GQLContext;
 import com.anasdidi.clinic.domain.auth.AuthDTO;
 import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
 import com.anasdidi.clinic.domain.user.UserDTO;
@@ -69,7 +70,7 @@ public class GraphQLFactory {
       return Publishers
           .just(executionInput.transform((builder) -> builder
               .context(GraphQLContext.newContext()
-                  .of("traceId", CommonUtils.generateTraceId())
+                  .of(GQLContext.TRACE_ID.key, CommonUtils.generateTraceId())
                   .build())));
     };
   }

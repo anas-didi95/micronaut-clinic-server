@@ -14,4 +14,14 @@ public final class CommonConstants {
       this.code = code;
     }
   }
+
+  public enum GQLContext {
+    TRACE_ID("traceId");
+
+    public final String key;
+
+    private GQLContext(String key) {
+      this.key = key;
+    }
+  }
 }

@@ -5,11 +5,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import com.anasdidi.clinic.common.BaseDataFetcher;
+import com.anasdidi.clinic.common.CommonConstants.GQLContext;
 import com.anasdidi.clinic.common.SearchDTO;
 import com.anasdidi.clinic.domain.user.UserDTO;
 import com.anasdidi.clinic.domain.user.UserService;
 
-import graphql.GraphQLContext;
 import graphql.schema.DataFetcher;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
@@ -49,7 +49,7 @@ public class AuthDataFetcher extends BaseDataFetcher {
 
   public DataFetcher<CompletableFuture<UserDTO>> getUserId() {
     return (env) -> {
-      String traceId = ((GraphQLContext) env.getContext()).get("traceId");
+      String traceId = (String) getContext(env, GQLContext.TRACE_ID);
       AuthDTO source = env.getSource();
       return userService.getUserById(source.getUserId(), traceId).toFuture();
     };
