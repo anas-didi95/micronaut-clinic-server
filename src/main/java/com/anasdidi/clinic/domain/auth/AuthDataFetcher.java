@@ -6,7 +6,10 @@ import java.util.stream.Collectors;
 
 import com.anasdidi.clinic.common.BaseDataFetcher;
 import com.anasdidi.clinic.common.SearchDTO;
+import com.anasdidi.clinic.domain.user.UserDTO;
+import com.anasdidi.clinic.domain.user.UserService;
 
+import graphql.GraphQLContext;
 import graphql.schema.DataFetcher;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
@@ -18,10 +21,12 @@ import reactor.core.publisher.Mono;
 public class AuthDataFetcher extends BaseDataFetcher {
 
   private final AuthRepository authRepository;
+  private final UserService userService;
 
   @Inject
-  public AuthDataFetcher(AuthRepository authRepository) {
+  public AuthDataFetcher(AuthRepository authRepository, UserService userService) {
     this.authRepository = authRepository;
+    this.userService = userService;
   }
 
   public DataFetcher<CompletableFuture<SearchDTO<AuthDTO>>> getAuthSearch() {
@@ -39,6 +44,14 @@ public class AuthDataFetcher extends BaseDataFetcher {
             .pagination(new SearchDTO.PaginationDTO(result))
             .build();
       }).toFuture();
+    };
+  }
+
+  public DataFetcher<CompletableFuture<UserDTO>> getUserId() {
+    return (env) -> {
+      String traceId = ((GraphQLContext) env.getContext()).get("traceId");
+      AuthDTO source = env.getSource();
+      return userService.getUserById(source.getUserId(), traceId).toFuture();
     };
   }
 }

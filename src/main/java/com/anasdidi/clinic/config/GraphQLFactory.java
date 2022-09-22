@@ -3,6 +3,7 @@ package com.anasdidi.clinic.config;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.anasdidi.clinic.common.CommonUtils;
 import com.anasdidi.clinic.domain.auth.AuthDTO;
 import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
 import com.anasdidi.clinic.domain.user.UserDTO;
@@ -42,6 +43,7 @@ public class GraphQLFactory {
             .dataFetcher("userSearch", userDataFetcher.getUserSearch())
             .dataFetcher("user", userDataFetcher.getUser())
             .dataFetcher("authSearch", authDataFetcher.getAuthSearch()))
+        .type("Auth", typeWiring -> typeWiring.dataFetcher("user", authDataFetcher.getUserId()))
         .type("RecordMetadata", typeWiring -> typeWiring.typeResolver(new TypeResolver() {
           @Override
           public GraphQLObjectType getType(TypeResolutionEnvironment env) {
@@ -66,7 +68,9 @@ public class GraphQLFactory {
     return (executionInput, httpRequest, httpResponse) -> {
       return Publishers
           .just(executionInput.transform((builder) -> builder
-              .context(GraphQLContext.newContext().build())));
+              .context(GraphQLContext.newContext()
+                  .of("traceId", CommonUtils.generateTraceId())
+                  .build())));
     };
   }
 

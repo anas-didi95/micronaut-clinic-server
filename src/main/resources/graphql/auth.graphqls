@@ -1,6 +1,6 @@
 type Auth implements RecordMetadata {
   id: ID!
-  userId: String!
+  user: User!
   isDeleted: Boolean!
   createdDate(format: String): String!
   createdBy: String!
