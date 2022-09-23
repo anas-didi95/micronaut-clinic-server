@@ -28,6 +28,7 @@ import io.micronaut.configuration.graphql.GraphQLExecutionInputCustomizer;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.io.ResourceResolver;
+import io.micronaut.runtime.http.scope.RequestScope;
 import jakarta.inject.Singleton;
 
 @Factory
@@ -79,7 +80,7 @@ public class GraphQLFactory {
     };
   }
 
-  @Singleton
+  @RequestScope
   public DataLoaderRegistry dataLoaderRegistry(UserService userService) {
     DataLoaderRegistry registry = new DataLoaderRegistry();
     registry.register(CommonConstants.GraphQL.DataLoader.User.key,
