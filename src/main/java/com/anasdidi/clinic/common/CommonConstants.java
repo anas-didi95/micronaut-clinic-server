@@ -15,13 +15,26 @@ public final class CommonConstants {
     }
   }
 
-  public enum GQLContext {
-    TRACE_ID("traceId");
+  public final class GraphQL {
 
-    public final String key;
+    public enum Context {
+      TRACE_ID("traceId");
 
-    private GQLContext(String key) {
-      this.key = key;
+      public final String key;
+
+      private Context(String key) {
+        this.key = key;
+      }
+    }
+
+    public enum DataLoader {
+      User("user");
+
+      public final String key;
+
+      private DataLoader(String key) {
+        this.key = key;
+      }
     }
   }
 }

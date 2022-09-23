@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 
-import com.anasdidi.clinic.common.CommonConstants.GQLContext;
+import com.anasdidi.clinic.common.CommonConstants;
 import com.anasdidi.clinic.common.CommonUtils;
 import com.anasdidi.clinic.domain.auth.AuthDTO;
 import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
@@ -74,7 +74,7 @@ public class GraphQLFactory {
       return Publishers
           .just(executionInput.transform((builder) -> builder
               .context(GraphQLContext.newContext()
-                  .of(GQLContext.TRACE_ID.key, CommonUtils.generateTraceId())
+                  .of(CommonConstants.GraphQL.Context.TRACE_ID.key, CommonUtils.generateTraceId())
                   .build())));
     };
   }
@@ -82,10 +82,11 @@ public class GraphQLFactory {
   @Singleton
   public DataLoaderRegistry dataLoaderRegistry(UserService userService) {
     DataLoaderRegistry registry = new DataLoaderRegistry();
-    registry.register("user", DataLoader.<String, UserDTO>newMappedDataLoader((keys, env) -> {
-      return userService.getUsersByIdIn(keys, CommonUtils.generateTraceId()).collectMap(o -> o.getId(), o -> o)
-          .toFuture();
-    }));
+    registry.register(CommonConstants.GraphQL.DataLoader.User.key,
+        DataLoader.<String, UserDTO>newMappedDataLoader((keys, env) -> {
+          return userService.getUsersByIdIn(keys, CommonUtils.generateTraceId()).collectMap(o -> o.getId(), o -> o)
+              .toFuture();
+        }));
     return registry;
   }
 

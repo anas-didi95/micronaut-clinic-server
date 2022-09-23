@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import com.anasdidi.clinic.common.BaseDataFetcher;
+import com.anasdidi.clinic.common.CommonConstants;
 import com.anasdidi.clinic.common.SearchDTO;
 import com.anasdidi.clinic.domain.user.UserDTO;
 
@@ -46,7 +47,8 @@ public class AuthDataFetcher extends BaseDataFetcher {
   public DataFetcher<CompletableFuture<UserDTO>> getUserId() {
     return (env) -> {
       AuthDTO source = env.getSource();
-      return env.<String, UserDTO>getDataLoader("user").load(source.getUserId(), env.getContext());
+      return env.<String, UserDTO>getDataLoader(CommonConstants.GraphQL.DataLoader.User.key)
+          .load(source.getUserId(), env.getContext());
     };
   }
 }

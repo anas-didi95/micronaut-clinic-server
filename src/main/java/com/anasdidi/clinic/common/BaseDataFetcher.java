@@ -1,7 +1,5 @@
 package com.anasdidi.clinic.common;
 
-import com.anasdidi.clinic.common.CommonConstants.GQLContext;
-
 import graphql.GraphQLContext;
 import graphql.schema.DataFetchingEnvironment;
 import io.micronaut.data.model.Pageable;
@@ -14,7 +12,7 @@ public abstract class BaseDataFetcher {
     return Pageable.from(page - 1, size);
   }
 
-  protected Object getContext(DataFetchingEnvironment env, GQLContext context) {
+  protected Object getContext(DataFetchingEnvironment env, CommonConstants.GraphQL.Context context) {
     return ((GraphQLContext) env.getContext()).get(context.key);
   }
 
