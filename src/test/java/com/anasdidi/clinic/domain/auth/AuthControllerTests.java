@@ -11,8 +11,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import com.anasdidi.clinic.client.AppClient;
 import com.anasdidi.clinic.common.TestConstants;
 import com.anasdidi.clinic.common.TestConstants.User;
+import com.anasdidi.clinic.common.TestUtils;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
 
@@ -30,6 +32,8 @@ import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest;
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 import jakarta.inject.Inject;
 
 @MicronautTest
@@ -41,13 +45,19 @@ public class AuthControllerTests {
   private final HttpClient client;
   private final RefreshTokenGenerator refreshTokenGenerator;
   private final AuthRepository authRepository;
+  private final AppClient appClient;
 
   @Inject
   AuthControllerTests(@Client("/") HttpClient client, RefreshTokenGenerator refreshTokenGenerator,
-      AuthRepository authRepository) {
+      AuthRepository authRepository, AppClient appClient) {
     this.client = client;
     this.refreshTokenGenerator = refreshTokenGenerator;
     this.authRepository = authRepository;
+    this.appClient = appClient;
+  }
+
+  public String getAccessToken() {
+    return TestUtils.getAccessToken(appClient);
   }
 
   @Test
@@ -178,5 +188,14 @@ public class AuthControllerTests {
     Map m = mapOptional.get();
     assertEquals("invalid_grant", m.get("error"));
     assertEquals("refresh token revoked", m.get("error_description"));
+  }
+
+  @Test
+  public void testAuthLogoutSuccess(RequestSpecification spec) {
+    spec
+        .given().accept(ContentType.JSON).contentType(ContentType.JSON)
+        .auth().oauth2(getAccessToken())
+        .when().delete("/clinic/auth/logout")
+        .then().statusCode(HttpStatus.NO_CONTENT.getCode());
   }
 }
