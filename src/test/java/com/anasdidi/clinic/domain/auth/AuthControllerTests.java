@@ -165,6 +165,7 @@ public class AuthControllerTests {
     Optional<String> refreshTokenOptional = refreshTokenGenerator.generate(user, refreshToken);
     assertTrue(refreshTokenOptional.isPresent());
 
+    authRepository.deleteAll().block();
     long oldTokenCount = authRepository.count().block();
     String signedRefreshToken = refreshTokenOptional.get();
     AuthDAO dao = AuthDAO.builder().userId(user.getName()).refreshToken(refreshToken).build();
