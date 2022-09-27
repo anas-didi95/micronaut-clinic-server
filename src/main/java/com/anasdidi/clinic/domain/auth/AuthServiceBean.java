@@ -1,5 +1,7 @@
 package com.anasdidi.clinic.domain.auth;
 
+import java.security.Principal;
+
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,5 +57,15 @@ public class AuthServiceBean implements AuthService {
           }, error -> emitter.error(new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT,
               "refresh token not found", null)));
     }, FluxSink.OverflowStrategy.ERROR);
+  }
+
+  @Override
+  public Mono<Long> logout(Principal principal, String traceId) {
+    logger.debug("[{}:logout] principal.name={}", traceId, principal.getName());
+
+    return Mono.just(principal)
+        .map(p -> p.getName())
+        .flatMap(authRepository::deleteByUserId)
+        .doOnError(error -> logger.error("[{}:logout] principal.name={}", traceId, principal.getName()));
   }
 }

@@ -15,4 +15,6 @@ interface AuthRepository extends ReactorPageableRepository<AuthDAO, UUID> {
   Mono<AuthDAO> findByRefreshToken(String refreshToken);
 
   Mono<Page<AuthDAO>> findAllByIsDeleted(Boolean isDeleted, Pageable pageable);
+
+  Mono<Long> deleteByUserId(String userId);
 }
