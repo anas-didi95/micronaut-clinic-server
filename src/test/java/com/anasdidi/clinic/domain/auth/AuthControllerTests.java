@@ -193,14 +193,14 @@ public class AuthControllerTests {
 
   @Test
   public void testAuthLogoutSuccess(RequestSpecification spec) {
-    String accessToken = getAccessToken();
     authRepository.deleteAll().block();
-    Long beforeCount = 0L;
+    TestUtils.getAccessToken(appClient, TestConstants.User.ADMIN2);
+    Long beforeCount = 1L;
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON)
-        .auth().oauth2(accessToken)
-        .when().delete("/clinic/auth/logout")
+        .auth().oauth2(getAccessToken())
+        .when().delete("%s/auth/logout".formatted(baseURI))
         .then().statusCode(HttpStatus.NO_CONTENT.getCode());
 
     Long afterCount = authRepository.count().block();
