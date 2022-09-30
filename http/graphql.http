@@ -8,7 +8,10 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "query": "query A {\n  userSearch {\n    resultList {\n      id\n    }\n    pagination {\n      totalPages\n    }\n  }\n}\n",
-    "variables": null,
+    "query": "query A($page: Int!, $size: Int!) {\n  userSearch(page: $page, size: $size) {\n    resultList {\n      id\n    }\n    pagination {\n      totalPages\n    }\n  }\n}",
+    "variables": {
+        "page": 1,
+        "size": 10
+    },
     "operationName": "A"
 }
