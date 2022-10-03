@@ -30,7 +30,7 @@ public final class CommonUtils {
 
   public static BCryptPasswordEncoder getPasswordEncoder() {
     if (passwordEncoder == null) {
-      passwordEncoder = new BCryptPasswordEncoder(14);
+      passwordEncoder = new BCryptPasswordEncoder();
     }
     return passwordEncoder;
   }
