@@ -50,7 +50,8 @@ interface UserController {
       @ExampleObject("""
           {
             "id": "anas",
-            "fullName": "Anas Juwaidi"
+            "fullName": "Anas Juwaidi",
+            "password": "p@ssw0rd"
           }
           """) })) @Body UserDTO requestBody);
 
