@@ -99,4 +99,6 @@ Following table is a **mandatory** environment variables used in this project.
 | DB_NAME | String | Database name |
 | DB_USERNAME | String | Database username |
 | DB_PASSWORD | String | Database password |
+| JWT_ACCESS_TOKEN_SECRET | String | Secret for JWT access token |
+| JWT_REFRESH_TOKEN_SECRET | String | Secret for JWT refresh token |
 | MICRONAUT_ENVIRONMENTS | String | Active environment names (e.g. dev,test)(use comma for multiple names) |
