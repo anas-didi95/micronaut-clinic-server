@@ -4,10 +4,6 @@ import java.time.Instant;
 
 public interface IRecordMetadata {
 
-  String getId();
-
-  void setId(String id);
-
   Boolean getIsDeleted();
 
   void setIsDeleted(Boolean isDeleted);

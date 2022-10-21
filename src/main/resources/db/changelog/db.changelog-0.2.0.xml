@@ -1,18 +1,18 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-  <changeSet id="0.1.0-1" author="anas">
-    <tagDatabase tag="0.1.0" />
+  <changeSet id="0.2.0-1" author="anas">
+    <tagDatabase tag="0.2.0" />
   </changeSet>
 
-  <changeSet id="0.1.0-2" author="anas">
-    <createTable catalogName="clinic" remarks="User Table" schemaName="public" tableName="t_user">
+  <changeSet id="0.2.0-2" author="anas">
+    <createTable catalogName="clinic" remarks="Auth Table" schemaName="public" tableName="t_auth">
       <column name="id" type="varchar(36)">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_auth" />
       </column>
-      <column name="password" type="varchar(100)">
+      <column name="user_id" type="varchar(36)">
         <constraints nullable="false" />
       </column>
-      <column name="full_name" type="varchar(100)">
+      <column name="refresh_token" type="text">
         <constraints nullable="false" />
       </column>
       <column name="is_del" type="boolean" defaultValue="false" value="false" />
@@ -22,12 +22,5 @@
       <column name="updated_by" type="varchar(36)" />
       <column name="version" type="int" />
     </createTable>
-  </changeSet>
-
-  <changeSet id="0.1.0-A" author="anas" context="dev">
-    <loadData encoding="UTF-8" file="classpath:/db/csv/0.1.0-A.t_user.csv" schemaName="public" tableName="t_user" />
-    <rollback>
-      <delete schemaName="public" tableName="t_user" />
-    </rollback>
   </changeSet>
 </databaseChangeLog>

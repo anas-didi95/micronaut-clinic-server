@@ -1,9 +1,10 @@
-package com.anasdidi.clinic.domain.user;
+package com.anasdidi.clinic.domain.auth;
 
-import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
 import com.anasdidi.clinic.common.BaseDAO;
 
+import io.micronaut.data.annotation.AutoPopulated;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
@@ -19,18 +20,18 @@ import lombok.ToString;
 @Builder
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = "password")
-@MappedEntity(value = "t_user")
-class UserDAO extends BaseDAO {
+@ToString(callSuper = true)
+@MappedEntity(value = "t_auth")
+public class AuthDAO extends BaseDAO {
 
   @Id
   @MappedProperty(value = "id")
-  private String id;
+  @AutoPopulated(updateable = false)
+  private UUID id;
 
-  @MappedProperty(value = "password")
-  private String password;
+  @MappedProperty(value = "user_id")
+  private String userId;
 
-  @MappedProperty(value = "full_name")
-  @NotBlank
-  private String fullName;
+  @MappedProperty(value = "refresh_token")
+  private String refreshToken;
 }

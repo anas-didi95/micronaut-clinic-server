@@ -14,4 +14,27 @@ public final class CommonConstants {
       this.code = code;
     }
   }
+
+  public final class GraphQL {
+
+    public enum Context {
+      TRACE_ID("traceId");
+
+      public final String key;
+
+      private Context(String key) {
+        this.key = key;
+      }
+    }
+
+    public enum DataLoader {
+      User("user");
+
+      public final String key;
+
+      private DataLoader(String key) {
+        this.key = key;
+      }
+    }
+  }
 }

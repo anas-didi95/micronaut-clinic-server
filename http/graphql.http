@@ -1,0 +1,17 @@
+@baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic/graphql
+@accessToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaGVybG9jayIsIm5iZiI6MTY2MjQ2NzU2Nywicm9sZXMiOltdLCJpc3MiOiJjbGluaWMiLCJleHAiOjE2NjI0NzExNjcsImlhdCI6MTY2MjQ2NzU2N30.uy3Jhmv1-tYuNE0f9FhavWxSlVlBQ-ME837Gvj3uzHk
+
+// @name userSearch
+POST {{baseUrl}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "query": "query A($page: Int!, $size: Int!) {\n  userSearch(page: $page, size: $size) {\n    resultList {\n      id\n    }\n    pagination {\n      totalPages\n    }\n  }\n}",
+    "variables": {
+        "page": 1,
+        "size": 10
+    },
+    "operationName": "A"
+}

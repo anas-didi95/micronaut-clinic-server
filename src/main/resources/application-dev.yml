@@ -1,3 +1,27 @@
+micronaut:
+  security:
+    intercept-url-map:
+      - pattern: /clinic/graphql**
+        httpMethod: POST
+        access:
+          - isAnonymous()
+      - pattern: /clinic/graphiql**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+      - pattern: /clinic/rapidoc/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+      - pattern: /clinic/swagger/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+      - pattern: /clinic/swagger-ui/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+
 liquibase:
   datasources:
     default:

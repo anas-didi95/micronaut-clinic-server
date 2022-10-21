@@ -1,0 +1,70 @@
+openapi: 3.0.1
+info:
+  title: Security
+  description: Endpoints related to the Micronaut Security
+  version: "1.0"
+paths:
+  /login:
+    post:
+      tags:
+        - security
+      description: Get access token
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+            examples:
+              example:
+                value:
+                  username: admin1
+                  password: p@ssw0rd
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                    format: int64
+              examples:
+                example:
+                  value:
+                    username: admin1
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEiLCJuYmYiOjE2NjQ2MjgxODAsInJvbGVzIjpbXSwiaXNzIjoiY2xpbmljIiwiZXhwIjoxNjY0NjMxNzgwLCJpYXQiOjE2NjQ2MjgxODB9.rJWX5rtnaakgFGYc3aQNyXvPOxKPYFBx5bbNFykNNBM
+                    refresh_token: eyJhbGciOiJIUzI1NiJ9.NGIzZTI5MGYtNTZlZi00MjE5LWFlMzEtY2FhZmJlYzE4NGQw.i9al-cwDNW-CnI792BbiMSjCpU07uHgxR-zoX2Iy-tg
+                    token_type: Bearer
+                    expires_in: 3600
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example:
+                  value:
+                    message: Credentials Do Not Match

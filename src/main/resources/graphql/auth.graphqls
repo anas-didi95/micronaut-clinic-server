@@ -1,6 +1,6 @@
-type User implements RecordMetadata {
-  id: String!
-  fullName: String!
+type Auth implements RecordMetadata {
+  id: ID!
+  user: User!
   isDeleted: Boolean!
   createdDate(format: String): String!
   createdBy: String!
@@ -9,12 +9,11 @@ type User implements RecordMetadata {
   version: Int!
 }
 
-type UserSearch {
-  resultList: [User]!
+type AuthSearch {
+  resultList: [Auth]!
   pagination: Pagination!
 }
 
 extend type Query {
-  userSearch(page: Int! = 1, size: Int! = 10): UserSearch!
-  user(id: String!): User!
+  authSearch(page: Int! = 1, size: Int! = 10, isDeleted: Boolean): AuthSearch!
 }

@@ -1,0 +1,18 @@
+openapi: 3.0.1
+info:
+  title: Swagger
+  description: Endpoints related to the OpenAPI
+  version: "1.0"
+paths:
+  /swagger/micronaut-clinic-microservice-0.2.0.yml:
+    get:
+      tags:
+        - openapi
+      description: Get OpenAPI YAML file describing the API
+      operationId: swagger
+      parameters: []
+      responses:
+        "200":
+          description: OpenAPI YAML file describing the API
+          content:
+            text/plain: {}

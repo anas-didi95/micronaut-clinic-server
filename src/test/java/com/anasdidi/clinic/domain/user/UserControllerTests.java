@@ -4,6 +4,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.anasdidi.clinic.client.AppClient;
+import com.anasdidi.clinic.common.TestUtils;
+
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
@@ -16,19 +19,26 @@ class UserControllerTests {
 
   private static final String baseURI = "/clinic/v1/user";
   private final UserRepository userRepository;
+  private final AppClient appClient;
 
   @Inject
-  UserControllerTests(UserRepository userRepository) {
+  UserControllerTests(UserRepository userRepository, AppClient appClient) {
     this.userRepository = userRepository;
+    this.appClient = appClient;
   }
 
   private UserDTO getRequestBody() {
     String value = "" + System.currentTimeMillis();
     UserDTO requestBody = UserDTO.builder()
+        .password("password")
         .fullName("fullName" + value)
         .build();
     requestBody.setId("id" + value);
     return requestBody;
+  }
+
+  public String getAccessToken() {
+    return TestUtils.getAccessToken(appClient);
   }
 
   private void assertRecord(boolean isUpdate, UserDTO dto, UserDAO dao, Long expectedVersion) {
@@ -51,6 +61,7 @@ class UserControllerTests {
 
     UserDTO responseBody = spec
         .given().body(requestBody).accept(ContentType.JSON).contentType(ContentType.JSON)
+        .auth().oauth2(getAccessToken())
         .when().post(baseURI)
         .then().statusCode(HttpStatus.CREATED.getCode())
         .body("id", Matchers.notNullValue())
@@ -69,6 +80,7 @@ class UserControllerTests {
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().post(baseURI)
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("traceId", Matchers.notNullValue())
@@ -84,6 +96,7 @@ class UserControllerTests {
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().post(baseURI)
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("traceId", Matchers.notNullValue())
@@ -101,6 +114,7 @@ class UserControllerTests {
 
     UserDTO responseBody = spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().put("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.OK.getCode())
         .body("id", Matchers.notNullValue())
@@ -119,6 +133,7 @@ class UserControllerTests {
 
     spec
         .accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().put("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("traceId", Matchers.notNullValue())
@@ -137,6 +152,7 @@ class UserControllerTests {
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().put("%s/%s".formatted(baseURI, System.currentTimeMillis()))
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("traceId", Matchers.notNullValue())
@@ -154,6 +170,7 @@ class UserControllerTests {
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().put("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("traceId", Matchers.notNullValue())
@@ -172,6 +189,7 @@ class UserControllerTests {
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().delete("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.NO_CONTENT.getCode());
 
@@ -189,6 +207,7 @@ class UserControllerTests {
 
     spec
         .given().accept(ContentType.JSON).contentType(ContentType.JSON).body(requestBody)
+        .auth().oauth2(getAccessToken())
         .when().delete("%s/%s".formatted(baseURI, domain.getId()))
         .then().statusCode(HttpStatus.BAD_REQUEST.getCode())
         .body("traceId", Matchers.notNullValue())

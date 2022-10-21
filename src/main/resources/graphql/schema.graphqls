@@ -1,3 +1,12 @@
+interface RecordMetadata {
+  isDeleted: Boolean!
+  createdDate(format: String): String!
+  createdBy: String!
+  updatedDate(format: String): String
+  updatedBy: String
+  version: Int!
+}
+
 type Pagination {
   totalPages: Int!
   pageNumber: Int!

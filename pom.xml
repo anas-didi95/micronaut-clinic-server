@@ -3,25 +3,27 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.anasdidi</groupId>
   <artifactId>clinic</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <packaging>${packaging}</packaging>
 
   <parent>
     <groupId>io.micronaut</groupId>
     <artifactId>micronaut-parent</artifactId>
-    <version>3.6.1</version>
+    <version>3.6.2</version>
   </parent>
 
   <properties>
     <packaging>jar</packaging>
     <jdk.version>17</jdk.version>
     <release.version>17</release.version>
-    <micronaut.version>3.6.1</micronaut.version>
+    <micronaut.version>3.6.2</micronaut.version>
     <micronaut.runtime>netty</micronaut.runtime>
-    <micronaut.data.version>3.7.2</micronaut.data.version>
+    <micronaut.data.version>3.7.3</micronaut.data.version>
     <micronaut.test.resources.enabled>false</micronaut.test.resources.enabled>
     <exec.mainClass>com.anasdidi.clinic.Application</exec.mainClass>
     <liquibase.version>4.14.0</liquibase.version>
+    <spring-security-crypto.version>5.7.3</spring-security-crypto.version>
+    <commons-logging.version>1.2</commons-logging.version>
   </properties>
 
   <repositories>
@@ -103,6 +105,16 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>io.micronaut.security</groupId>
+      <artifactId>micronaut-security</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut.security</groupId>
+      <artifactId>micronaut-security-jwt</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>io.micronaut.sql</groupId>
       <artifactId>micronaut-jdbc-hikari</artifactId>
       <scope>compile</scope>
@@ -141,6 +153,17 @@
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-rest-assured</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-crypto</artifactId>
+      <version>${spring-security-crypto.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
     </dependency>
   </dependencies>
 
@@ -193,6 +216,11 @@
               <groupId>io.micronaut.openapi</groupId>
               <artifactId>micronaut-openapi</artifactId>
               <version>${micronaut.openapi.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut.security</groupId>
+              <artifactId>micronaut-security-annotations</artifactId>
+              <version>${micronaut.security.version}</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs>

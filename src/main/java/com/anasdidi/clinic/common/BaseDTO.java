@@ -16,7 +16,6 @@ import lombok.ToString;
 @ToString
 public abstract class BaseDTO implements IRecordMetadata {
 
-  private String id;
   private Boolean isDeleted;
   private Instant createdDate;
   private String createdBy;

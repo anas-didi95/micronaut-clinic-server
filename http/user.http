@@ -1,14 +1,16 @@
 @baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic/v1/user
 @userId = {{create.response.body.$.id}}
+@accessToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaGVybG9jayIsIm5iZiI6MTY2MjcyNTc5Mywicm9sZXMiOltdLCJpc3MiOiJjbGluaWMiLCJleHAiOjE2NjI3MjkzOTMsImlhdCI6MTY2MjcyNTc5M30.G8yXhdbCWuUUvo-oN9Eb0etn32hQL-YCgypbtveNU00
 
 // @name create
 POST {{baseUrl}}
 Accept: application/json
 Content-Type: application/json
-Accept-Language: en
+Authorization: Bearer {{accessToken}}
 
 {
   "id": "anas",
+  "password": "p@ssw0rd",
   "fullName": "Anas Juwaidi"
 }
 
@@ -18,6 +20,7 @@ Accept-Language: en
 PUT {{baseUrl}}/{{userId}}
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 {
   "id": "anas",
@@ -31,6 +34,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/{{userId}}
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 {
   "id": "anas",

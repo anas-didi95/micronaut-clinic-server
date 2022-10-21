@@ -9,6 +9,8 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -18,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 
+@Secured(SecurityRule.IS_AUTHENTICATED)
 interface UserController {
 
   @Post(value = "/", consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON })
@@ -27,6 +30,7 @@ interface UserController {
       @ExampleObject("""
           {
              "id": "anas",
+             "password": "password",
              "createdDate": 1661084378.897929437,
              "createdBy": "SYSTEM",
              "updatedDate": 1661084378.897929437,
@@ -46,7 +50,8 @@ interface UserController {
       @ExampleObject("""
           {
             "id": "anas",
-            "fullName": "Anas Juwaidi"
+            "fullName": "Anas Juwaidi",
+            "password": "p@ssw0rd"
           }
           """) })) @Body UserDTO requestBody);
 

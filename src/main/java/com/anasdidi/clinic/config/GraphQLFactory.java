@@ -3,12 +3,23 @@ package com.anasdidi.clinic.config;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import com.anasdidi.clinic.domain.user.UserDataFetcher;
+import org.dataloader.DataLoader;
+import org.dataloader.DataLoaderRegistry;
 
-import graphql.ExecutionInput;
+import com.anasdidi.clinic.common.CommonConstants;
+import com.anasdidi.clinic.common.CommonUtils;
+import com.anasdidi.clinic.domain.auth.AuthDTO;
+import com.anasdidi.clinic.domain.auth.AuthDataFetcher;
+import com.anasdidi.clinic.domain.user.UserDTO;
+import com.anasdidi.clinic.domain.user.UserDataFetcher;
+import com.anasdidi.clinic.domain.user.UserService;
+
 import graphql.GraphQL;
 import graphql.GraphQLContext;
+import graphql.TypeResolutionEnvironment;
+import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.TypeResolver;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -17,23 +28,40 @@ import io.micronaut.configuration.graphql.GraphQLExecutionInputCustomizer;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.io.ResourceResolver;
+import io.micronaut.runtime.http.scope.RequestScope;
 import jakarta.inject.Singleton;
 
 @Factory
 public class GraphQLFactory {
 
   @Singleton
-  public GraphQL graphQL(ResourceResolver resourceResolver, UserDataFetcher userDataFetcher) {
+  public GraphQL graphQL(ResourceResolver resourceResolver, UserDataFetcher userDataFetcher,
+      AuthDataFetcher authDataFetcher) {
     SchemaParser schemaParser = new SchemaParser();
     TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
     typeRegistry
         .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/schema.graphqls"))
-        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/user.graphqls"));
+        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/user.graphqls"))
+        .merge(getTypeDefinitionRegistry(resourceResolver, schemaParser, "classpath:graphql/auth.graphqls"));
 
     RuntimeWiring runtimeWiring = RuntimeWiring.newRuntimeWiring()
         .type("Query", typeWiring -> typeWiring
             .dataFetcher("userSearch", userDataFetcher.getUserSearch())
-            .dataFetcher("user", userDataFetcher.getUser()))
+            .dataFetcher("user", userDataFetcher.getUser())
+            .dataFetcher("authSearch", authDataFetcher.getAuthSearch()))
+        .type("Auth", typeWiring -> typeWiring.dataFetcher("user", authDataFetcher.getUserId()))
+        .type("RecordMetadata", typeWiring -> typeWiring.typeResolver(new TypeResolver() {
+          @Override
+          public GraphQLObjectType getType(TypeResolutionEnvironment env) {
+            Object object = env.getObject();
+            if (object instanceof UserDTO) {
+              return env.getSchema().getObjectType("User");
+            } else if (object instanceof AuthDTO) {
+              return env.getSchema().getObjectType("Auth");
+            }
+            return null;
+          }
+        }))
         .build();
 
     SchemaGenerator schemaGenerator = new SchemaGenerator();
@@ -44,13 +72,23 @@ public class GraphQLFactory {
   @Singleton
   public GraphQLExecutionInputCustomizer graphQLExecutionInputCustomizer() {
     return (executionInput, httpRequest, httpResponse) -> {
-      ExecutionInput.Builder executionInputBuilder = ExecutionInput.newExecutionInput()
-          .query(executionInput.getQuery())
-          .operationName(executionInput.getOperationName())
-          .variables(executionInput.getVariables())
-          .context(GraphQLContext.newContext().build());
-      return Publishers.just(executionInputBuilder.build());
+      return Publishers
+          .just(executionInput.transform((builder) -> builder
+              .context(GraphQLContext.newContext()
+                  .of(CommonConstants.GraphQL.Context.TRACE_ID.key, CommonUtils.generateTraceId())
+                  .build())));
     };
+  }
+
+  @RequestScope
+  public DataLoaderRegistry dataLoaderRegistry(UserService userService) {
+    DataLoaderRegistry registry = new DataLoaderRegistry();
+    registry.register(CommonConstants.GraphQL.DataLoader.User.key,
+        DataLoader.<String, UserDTO>newMappedDataLoader((keys, env) -> {
+          return userService.getUsersByIdIn(keys, CommonUtils.generateTraceId()).collectMap(o -> o.getId(), o -> o)
+              .toFuture();
+        }));
+    return registry;
   }
 
   private TypeDefinitionRegistry getTypeDefinitionRegistry(ResourceResolver resourceResolver, SchemaParser schemaParser,

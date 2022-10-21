@@ -1,0 +1,33 @@
+@baseUrl = http://{{$processEnv APP_HOST}}:{{$processEnv APP_PORT}}/clinic
+@accessToken = {{login.response.body.$.access_token}}
+@refreshToken = {{login.response.body.$.refresh_token}}
+
+# @name login
+POST {{baseUrl}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "admin1",
+  "password": "p@ssw0rd"
+}
+
+###
+
+# @name oauth/access_token
+POST {{baseUrl}}/oauth/access_token
+Accept: application/json
+Content-Type: application/json
+
+{
+  "refresh_token": "{{refreshToken}}",
+  "grant_type": "refresh_token"
+}
+
+###
+
+# @name getAuthenticatedUsername
+GET {{baseUrl}}
+Accept: text/plain
+Content-Type: text/plain
+Authorization: Bearer {{accessToken}}

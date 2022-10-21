@@ -1,4 +1,6 @@
-package com.anasdidi.clinic.domain.user;
+package com.anasdidi.clinic.domain.auth;
+
+import java.util.UUID;
 
 import com.anasdidi.clinic.common.BaseDTO;
 
@@ -14,10 +16,9 @@ import lombok.ToString;
 @Builder
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = "password")
-public class UserDTO extends BaseDTO {
+@ToString(callSuper = true)
+public class AuthDTO extends BaseDTO {
 
-  private String id;
-  private String password;
-  private String fullName;
+  private UUID id;
+  private String userId;
 }
